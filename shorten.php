@@ -1,13 +1,13 @@
 <?php
 require_once('core.php');
 
-$storage_dir = 's/';
+define('STORAGE_DIR','s/');
 $enableDeletion = true;
 
 //open shortened link
 if($shorten = get('shorten',$_GET))
 {
-    if(file_exists($urlFileName = $storage_dir . $shorten))
+    if(file_exists($urlFileName = STORAGE_DIR . $shorten))
     {
         $link = file_get_contents($urlFileName);
 
@@ -22,18 +22,18 @@ if($shorten = get('shorten',$_GET))
     die(header('Location: http://' . SERVER));
 }
 
-$randomShorten = randString(6);
+$randomShorten = randString(4);
 
 //create shortened Link
 if($url = get('url',$_POST))
 {
     $shorten = get('shorten',$_POST);
 
-    if(!file_exists($urlFileName = $storage_dir . $shorten))
+    if(!file_exists($urlFileName = STORAGE_DIR . $shorten))
     {
         file_put_contents($urlFileName,$url);
         file_put_contents("{$urlFileName}.log",'');
-        header("Location: /shorten.php#{$shorten}");
+        die(header("Location: /shorten.php#{$shorten}"));
     }
     else
     {
@@ -44,11 +44,11 @@ if($url = get('url',$_POST))
 //delete shortened Link (depending on $enableDeletion)
 if($enableDeletion && $toDelete = get('delete',$_GET))
 {
-    if(file_exists($storage_dir . $toDelete. '.log'))
+    if(file_exists(STORAGE_DIR . $toDelete. '.log'))
     {
-        unlink($storage_dir . $toDelete);
-        unlink($storage_dir . $toDelete. '.log');
-        header("Location: /short");
+        unlink(STORAGE_DIR . $toDelete);
+        unlink(STORAGE_DIR . $toDelete. '.log');
+        die(header("Location: /short"));
     }
 }
 ?>
@@ -62,17 +62,29 @@ if($enableDeletion && $toDelete = get('delete',$_GET))
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 
     <style type="text/css">
+        h2
+        {
+            font-weight: bold;
+        }
         a:hover
         {
             text-decoration: none;
         }
-        .badge
+        .badge-s
         {
             background-color: #428bca;
         }
-        .badge:hover
+        .badge-s:hover
         {
             background-color: #2a6496;
+        }
+        .form-control-short
+        {
+            width: 200px;
+        }
+        .margin-left-10
+        {
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -89,7 +101,7 @@ if($enableDeletion && $toDelete = get('delete',$_GET))
         <form method="post" role="form" class="well">
             <div class="form-group">
                 <label for="shorten">Shortened URL <small>http://<?= SERVER ?>/</small></label>
-                <input class="form-control" onclick="select()" style="width:200px" type="text" name="shorten" id="shorten" value="<?= $randomShorten ?>" placeholder="Shortener URL..." />
+                <input class="form-control form-control-short" onclick="select()" type="text" name="shorten" id="shorten" value="<?= $randomShorten ?>" placeholder="Shortener URL..." />
             </div>
             <div class="form-group">
                 <label for="url">URL</label>
@@ -99,9 +111,12 @@ if($enableDeletion && $toDelete = get('delete',$_GET))
         </form>
         <input id="search" type="search" class="form-control" placeholder="Search..." onclick="select()" />
         <?php
-            foreach(glob($storage_dir . '*.log') as $log):
-                $shorten = substr($log,2,strlen($log)-6);
-                $url = file_get_contents($storage_dir . $shorten);
+            $logFiles = glob(STORAGE_DIR . '*.log');
+            //Sort the array of Files, newest first
+            usort($logFiles, create_function('$b,$a', 'return filemtime(STORAGE_DIR . substr($a,strlen(STORAGE_DIR),strlen($a)-6)) - filemtime(STORAGE_DIR . substr($b,strlen(STORAGE_DIR),strlen($b)-6));'));
+            foreach($logFiles as $log):
+                $shorten = substr($log,strlen(STORAGE_DIR),strlen($log)-6);
+                $url = file_get_contents(STORAGE_DIR . $shorten);
                 $shortenedLink = 'http://' . SERVER . '/' . $shorten;
                 $logFile = file($log);
         ?>
@@ -116,10 +131,10 @@ if($enableDeletion && $toDelete = get('delete',$_GET))
             </p>
             <p>
                 <a title="Show statistics" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#stats<?= $shorten ?>">
-                    <span class="badge"><?= count($logFile) ?></span>
+                    <span class="badge badge-s"><?= count($logFile) ?></span>
                 </a>
                 <?= $url ?>
-                <a style="margin-left:10px" href="<?= $url ?>" target="_blank" title="Open the URL">
+                <a class="margin-left-10" href="<?= $url ?>" target="_blank" title="Open the URL">
                     <span class="glyphicon glyphicon-tag"></span>
                 </a>
                 <a href="shorten.php?delete=<?= $shorten ?>" title="Delete the shortened URL" onclick="return confirm('Are you sure?')">
