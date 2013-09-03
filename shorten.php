@@ -44,10 +44,10 @@ if($url = get('url',$_POST))
 //delete shortened Link (depending on $enableDeletion)
 if($enableDeletion && $toDelete = get('delete',$_GET))
 {
-    if(file_exists($storage_dir . $toDelete. 'log'))
+    if(file_exists($storage_dir . $toDelete. '.log'))
     {
         unlink($storage_dir . $toDelete);
-        unlink($storage_dir . $toDelete. 'log');
+        unlink($storage_dir . $toDelete. '.log');
         header("Location: /short");
     }
 }
