@@ -23,3 +23,15 @@ function randString($length, $charset='abcdefghijklmnopqrstuvwxyz')
     }
     return $str;
 }
+
+function url_get_contents ($Url) {
+    if (!function_exists('curl_init')){
+        throw new Exception('CURL is not installed!');
+    }
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $Url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $output = curl_exec($ch);
+    curl_close($ch);
+    return $output;
+}
