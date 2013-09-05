@@ -117,7 +117,7 @@ if($enableDeletion && $toDelete = get('delete',$_GET))
                 $shorten = substr($file,strlen(STORAGE_DIR));
                 $url = file_get_contents($file);
                 $shortenedLink = 'http://' . SERVER . '/' . $shorten;
-                $logFile = file($file . '.log');
+                $logFile = file_get_contents($file . '.log');
         ?>
         <section id="<?= $shorten ?>">
             <h2>
@@ -130,7 +130,7 @@ if($enableDeletion && $toDelete = get('delete',$_GET))
             </p>
             <p>
                 <a title="Show statistics" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#stats<?= $shorten ?>">
-                    <span class="badge badge-s"><?= count($logFile) ?></span>
+                    <span class="badge badge-s"><?= substr_count($logFile,"\n") ?></span>
                 </a>
                 <?= $url ?>
                 <a class="margin-left-10" href="<?= $url ?>" target="_blank" title="Open the URL">
@@ -140,17 +140,11 @@ if($enableDeletion && $toDelete = get('delete',$_GET))
                     <span class="glyphicon glyphicon-remove-circle"></span>
                 </a>
             </p>
-            <ul id="stats<?= $shorten ?>" class="list-unstyled collapse well well-sm statistics">
-        <?php
-                foreach($logFile as $logEntry):
-        ?>
-                <li>
-                    <?= $logEntry ?>
-                </li>
-        <?php
-                endforeach;
-        ?>
-            </ul>
+            <div id="stats<?= $shorten ?>" class="collapse well well-sm statistics">
+                <p>
+                    <?= str_replace("\n",'<br>',$logFile) ?>
+                </p>
+            </div>
         </section>
         <?php
             endforeach;
