@@ -81,36 +81,8 @@ if($enableDeletion && $toDelete = get('delete',$_GET))
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 
-    <style type="text/css">
-        h2
-        {
-            font-weight: bold;
-        }
-        a:hover
-        {
-            text-decoration: none;
-        }
-        .badge-s
-        {
-            background-color: #428bca;
-        }
-        .badge-s:hover
-        {
-            background-color: #2a6496;
-        }
-        .form-control-short
-        {
-            width: 200px;
-        }
-        .margin-left-10
-        {
-            margin-left: 10px;
-        }
-        .statistics
-        {
-            font-size: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="shorten.css">
+
 </head>
 <body>
     <div class="container">
@@ -193,37 +165,7 @@ if($enableDeletion && $toDelete = get('delete',$_GET))
 <!-- Bootstrap: Latest compiled and minified JavaScript -->
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 
-<script type="text/javascript">
+<script src="shorten.js"></script>
 
-    $(document).ready(function(){
-
-        /* Search */
-        $('#search').keyup(function() {
-            $searchString = $(this).val();
-            $('section').each(function() {
-                if($(this).attr('id').toLowerCase().indexOf($searchString.toLowerCase()) >= 0)
-                    $(this).show(500);
-                else
-                    $(this).hide(500);
-            });
-        });
-
-        /* Copy to Clipboard using Jquery ZClip plugin; see http://www.steamdev.com/zclip/ */
-        $('input.shorten').zclip({
-            setHandCursor: false,
-            path:'http://davidwalsh.name/demo/ZeroClipboard.swf',
-            copy:function(){return $(this).val();},
-            afterCopy:function(){
-                $this = $(this);
-                $before = $(this).val();
-                $(this).val('Copied to Clipboard');
-                setTimeout(function() {
-                        $this.val($before);
-                    },1000);
-                $(this).animate({backgroundColor:'red'},500).animate({backgroundColor:'white'},500);
-            }
-        });
-    });
-</script>
 </body>
 </html>
