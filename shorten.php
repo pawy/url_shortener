@@ -11,10 +11,32 @@ if($shorten = get('shorten',$_GET))
     {
         $link = file_get_contents($urlFileName);
 
+        $statistics =
+            '"' . date('d.m.Y H:i') . '";' .
+            '"' . $_SERVER['REMOTE_ADDR'] . '";' .
+            '"' .$_SERVER['HTTP_USER_AGENT'] . '";';
+
+        //Location tracking; See http://ipinfodb.com/ip_location_api.php and get your FREE APIKey there
+        $ipinfodbAPIKey = 'e7ea367ef2e968f18be3cfa8b85af9994b3c886b5d541f87766a6c25be5fcef9';
+        try
+        {
+            //if your hoster does not allow file_get_contents cross url, use the fundtion url_get_content which uses CURL
+            $geoLocation = json_decode(url_get_contents('http://api.ipinfodb.com/v3/ip-city/?key=' . $ipinfodbAPIKey . '&format=json&ip=' . $_SERVER['REMOTE_ADDR']));
+            if(is_object($geoLocation))
+            {
+                $statistics .=
+                    '"' . $geoLocation->countryCode . '";' .
+                    '"' . $geoLocation->regionName . '";' .
+                    '"' . $geoLocation->cityName . '";' .
+                    '"' . $geoLocation->zipCode . '";' .
+                    '"' . $geoLocation->latitude . '";' .
+                    '"' . $geoLocation->longitude . '";' .
+                    '"' . $geoLocation->timeZone . '";';
+            }
+        }catch(Exception $e){}
+
         file_put_contents("{$urlFileName}.log",
-            date('d.m.Y H:i') . ';' .
-            $_SERVER['REMOTE_ADDR'] . ';' .
-            $_SERVER['HTTP_USER_AGENT'] . "\n",
+            $statistics . "\n",
             FILE_APPEND);
 
         die(header('Location: ' . $link));
@@ -86,6 +108,10 @@ if($enableDeletion && $toDelete = get('delete',$_GET))
         {
             margin-left: 10px;
         }
+        .statistics
+        {
+            font-size: 10px;
+        }
     </style>
 </head>
 <body>
@@ -111,14 +137,17 @@ if($enableDeletion && $toDelete = get('delete',$_GET))
         </form>
         <input id="search" type="search" class="form-control" placeholder="Search..." onclick="select()" />
         <?php
-            $logFiles = glob(STORAGE_DIR . '*.log');
+            $files = glob(STORAGE_DIR . '[a-z]*');
+            //filter out the logfiles, because glob is not able to return files according to REGEX properly
+            $files = array_filter($files, create_function('$item', 'return !strpos($item,".log");'));
             //Sort the array of Files, newest first
-            usort($logFiles, create_function('$b,$a', 'return filemtime(STORAGE_DIR . substr($a,strlen(STORAGE_DIR),strlen($a)-6)) - filemtime(STORAGE_DIR . substr($b,strlen(STORAGE_DIR),strlen($b)-6));'));
-            foreach($logFiles as $log):
-                $shorten = substr($log,strlen(STORAGE_DIR),strlen($log)-6);
-                $url = file_get_contents(STORAGE_DIR . $shorten);
+            usort($files, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
+
+            foreach($files as $file):
+                $shorten = substr($file,strlen(STORAGE_DIR));
+                $url = file_get_contents($file);
                 $shortenedLink = 'http://' . SERVER . '/' . $shorten;
-                $logFile = file($log);
+                $logFile = file($file . '.log');
         ?>
         <section id="<?= $shorten ?>">
             <h2>
@@ -141,7 +170,7 @@ if($enableDeletion && $toDelete = get('delete',$_GET))
                     <span class="glyphicon glyphicon-remove-circle"></span>
                 </a>
             </p>
-            <ul id="stats<?= $shorten ?>" class="list-unstyled collapse well well-sm">
+            <ul id="stats<?= $shorten ?>" class="list-unstyled collapse well well-sm statistics">
         <?php
                 foreach($logFile as $logEntry):
         ?>
@@ -167,8 +196,21 @@ if($enableDeletion && $toDelete = get('delete',$_GET))
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
-    /* Copy to Clipboard */
+
     $(document).ready(function(){
+
+        /* Search */
+        $('#search').keyup(function() {
+            $searchString = $(this).val();
+            $('section').each(function() {
+                if($(this).attr('id').toLowerCase().indexOf($searchString.toLowerCase()) >= 0)
+                    $(this).show(500);
+                else
+                    $(this).hide(500);
+            });
+        });
+
+        /* Copy to Clipboard using Jquery ZClip plugin; see http://www.steamdev.com/zclip/ */
         $('input.shorten').zclip({
             setHandCursor: false,
             path:'http://davidwalsh.name/demo/ZeroClipboard.swf',
@@ -183,18 +225,6 @@ if($enableDeletion && $toDelete = get('delete',$_GET))
                 $(this).animate({backgroundColor:'red'},500).animate({backgroundColor:'white'},500);
             }
         });
-
-        /* Search */
-        $('#search').keyup(function() {
-            $searchString = $(this).val();
-            $('section').each(function() {
-                if($(this).attr('id').toLowerCase().indexOf($searchString.toLowerCase()) >= 0)
-                    $(this).show(500);
-                else
-                    $(this).hide(500);
-            });
-        });
-
     });
 </script>
 </body>
