@@ -11,27 +11,25 @@ if($shorten = get('shorten',$_GET))
     {
         $link = file_get_contents($urlFileName);
 
+        $ip = $_SERVER['REMOTE_ADDR'];
+
         $statistics =
             '"' . date('d.m.Y H:i') . '";' .
-            '"' . $_SERVER['REMOTE_ADDR'] . '";' .
+            '"' . $ip . '";' .
             '"' .$_SERVER['HTTP_USER_AGENT'] . '";';
 
-        //Location tracking; See http://ipinfodb.com/ip_location_api.php and get your FREE APIKey there
-        $ipinfodbAPIKey = 'e7ea367ef2e968f18be3cfa8b85af9994b3c886b5d541f87766a6c25be5fcef9';
-        try
-        {
-            //if your hoster does not allow file_get_contents cross url, use the fundtion url_get_content which uses CURL
-            $geoLocation = json_decode(url_get_contents('http://api.ipinfodb.com/v3/ip-city/?key=' . $ipinfodbAPIKey . '&format=json&ip=' . $_SERVER['REMOTE_ADDR']));
+        //Location tracking; See http://ipinfo.io
+        try{
+            $geoLocation = json_decode(url_get_contents("http://ipinfo.io/{$ip}/json"));
             if(is_object($geoLocation))
             {
                 $statistics .=
-                    '"' . $geoLocation->countryCode . '";' .
-                    '"' . $geoLocation->regionName . '";' .
-                    '"' . $geoLocation->cityName . '";' .
-                    '"' . $geoLocation->zipCode . '";' .
-                    '"' . $geoLocation->latitude . '";' .
-                    '"' . $geoLocation->longitude . '";' .
-                    '"' . $geoLocation->timeZone . '";';
+                    '"' . $geoLocation->country . '";' .
+                    '"' . $geoLocation->region . '";' .
+                    '"' . $geoLocation->city . '";' .
+                    '"' . $geoLocation->org . '";' .
+                    '"' . $geoLocation->loc . '";' .
+                    '"' . $geoLocation->hostname . '";';
             }
         }catch(Exception $e){}
 
