@@ -6,8 +6,8 @@ AddDefaultCharset utf-8
 Options +FollowSymLinks
 
 RewriteRule ^short$ /shorten.php [L,QSA]
-# Use this if you have nothing else on this domain and the shorten script is your default page
-RewriteRule ^$ /shorten.php [L,QSA]
+# Uncomment the line below if you have nothing else on this domain and the shorten script is your default page
+# RewriteRule ^$ /shorten.php [L,QSA]
 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
