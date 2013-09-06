@@ -14,7 +14,7 @@ Lightweight file based url shortener in PHP
 
 Installation
 ------------
-1. Copy the file into your root directory
+1. Copy the files into your root directory
   a If you already have a directory called s you can rename the storage folder to anything you like
 2. Congratulations, you're done!
 
