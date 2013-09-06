@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-    /* Search */
+    // Search
     $('#search').keyup(function() {
         $searchString = $(this).val();
         $('section').each(function() {
@@ -14,12 +14,12 @@ $(document).ready(function(){
         }, 1000 );
     });
 
-    //Catch toggle events from Bootstrap to reposition the zclip flash
+    // Catch toggle events from Bootstrap to reposition the zclip flash
     $('.statistics').on('shown.bs.collapse', function () {
         setZclip();
     });
 
-    /* Copy to Clipboard using Jquery ZClip plugin; see http://www.steamdev.com/zclip/ */
+    // Copy to Clipboard using Jquery ZClip plugin; see http://www.steamdev.com/zclip/
     $('input.shorten').zclip({
         setHandCursor: false,
         path:'http://davidwalsh.name/demo/ZeroClipboard.swf',
