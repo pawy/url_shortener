@@ -25,3 +25,5 @@ Configuration
     - To enrypt a passwort google for "md5 generator"
 - Dedicated Service
   - To use the website only for this script, uncomment the corresponding line in the .htaccess file
+- Change the storage directory
+  - define('STORAGE_DIR','s/'); change s/ to any directory you want the url and logfiles to be stored
