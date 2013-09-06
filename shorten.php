@@ -1,8 +1,11 @@
 <?php
 require_once('core.php');
 
+//configure
 define('STORAGE_DIR','s/');
 $enableDeletion = true;
+$enablePasswordProtection = true;
+$passwordMd5Encrypted = 'bdc95b7532e651f3c140b95942851808';
 
 //open shortened link
 if($shorten = get('shorten',$_GET))
@@ -40,6 +43,20 @@ if($shorten = get('shorten',$_GET))
         die(header('Location: ' . $link));
     }
     die(header('Location: http://' . SERVER));
+}
+
+if($enablePasswordProtection)
+{
+    session_start();
+    if($pw = get('pw',$_POST))
+    {
+        $_SESSION['pw'] = md5($pw);
+    }
+
+    if(get('pw',$_SESSION,'') != $passwordMd5Encrypted)
+    {
+        die(header('Location: shortenerlogin.html'));
+    }
 }
 
 $randomShorten = randString(4);
