@@ -29,3 +29,5 @@ Configuration
   - To use the website only for this script, uncomment the corresponding line in the .htaccess file
 - Change the storage directory
   - define('STORAGE_DIR','s/'); change s/ to any directory you want the url and logfiles to be stored
+
+Feel free to change the script to your needs and notify me if you have some improvements!
