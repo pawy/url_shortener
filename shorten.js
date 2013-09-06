@@ -9,6 +9,14 @@ $(document).ready(function(){
             else
                 $(this).hide(500);
         });
+        setTimeout(function(){
+            setZclip();
+        }, 1000 );
+    });
+
+    //Catch toggle events from Bootstrap to reposition the zclip flash
+    $('.statistics').on('shown.bs.collapse', function () {
+        setZclip();
     });
 
     /* Copy to Clipboard using Jquery ZClip plugin; see http://www.steamdev.com/zclip/ */
@@ -26,5 +34,17 @@ $(document).ready(function(){
             $(this).animate({backgroundColor:'red'},500).animate({backgroundColor:'white'},500);
         }
     });
-
 });
+
+// Reposition the zClip's Flash to catch the click
+function setZclip()
+{
+    $('input.shorten').zclip('remove');
+    $('input.shorten').zclip({
+        setHandCursor: false,
+        path:'http://davidwalsh.name/demo/ZeroClipboard.swf',
+        copy:function(){return $(this).val();},
+        //the triggered function fires allthoug we removed the zClip, therefore we do not need to set it again
+        afterCopy:function(){}
+    });
+}
