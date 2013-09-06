@@ -9,3 +9,6 @@ Lightweight file based url shortener in PHP
 - easy integration in existing website
   - standard configuration for admin interface is "yourdomain.com/short"
   - you can also make a dedicated website for this service
+
+Installation
+------------
