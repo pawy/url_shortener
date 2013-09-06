@@ -109,7 +109,7 @@ if($enableDeletion && $toDelete = get('delete',$_GET))
         <?php
             $files = glob(STORAGE_DIR . '[a-z]*');
             //filter out the logfiles, because glob is not able to return files according to REGEX properly
-            $files = array_filter($files, create_function('$item', 'return !strpos($item,".log");'));
+            $files = array_filter($files, create_function('$item', 'return !strpos($item,".");'));
             //Sort the array of Files, newest first
             usort($files, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
 
