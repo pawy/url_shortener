@@ -4,6 +4,8 @@ url_shortener
 Lightweight file based url shortener in PHP
 
 - Create customized shortened URLs like "yourdomain.com/link"
+  - It is more personalized than using any public url-shorteners
+  - You can make the shortened url self speaking, unlike with the public url shorteners
 - Optional password protection
 - Click statistics
 - easy integration in existing website
