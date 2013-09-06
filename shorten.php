@@ -153,9 +153,11 @@ if($enableDeletion && $toDelete = get('delete',$_GET))
                 <a class="margin-left-10" href="<?= $url ?>" target="_blank" title="Open the URL">
                     <span class="glyphicon glyphicon-tag"></span>
                 </a>
+            <?php if($enableDeletion): ?>
                 <a href="shorten.php?delete=<?= $shorten ?>" title="Delete the shortened URL" onclick="return confirm('Are you sure?')">
                     <span class="glyphicon glyphicon-remove-circle"></span>
                 </a>
+            <?php endif; ?>
             </p>
             <div id="stats<?= $shorten ?>" class="collapse well well-sm statistics">
                 <p>
