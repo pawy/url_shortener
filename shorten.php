@@ -4,7 +4,7 @@ require_once('core.php');
 //configure
 define('STORAGE_DIR','s/');
 $enableDeletion = true;
-$enablePasswordProtection = true;
+$enablePasswordProtection = false;
 $passwordMd5Encrypted = 'bdc95b7532e651f3c140b95942851808';
 
 //open shortened link
