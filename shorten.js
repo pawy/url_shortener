@@ -16,7 +16,14 @@ $(document).ready(function(){
 
     // Catch toggle events from Bootstrap to reposition the zclip flash
     $('.statistics').on('shown.bs.collapse', function () {
-        setZclip();
+        setTimeout(function(){
+            setZclip();
+        }, 500 );
+    });
+    $('.statistics').on('hidden.bs.collapse', function () {
+        setTimeout(function(){
+            setZclip();
+        }, 500 );
     });
 
     // Copy to Clipboard using Jquery ZClip plugin; see http://www.steamdev.com/zclip/
