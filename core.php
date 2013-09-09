@@ -2,7 +2,7 @@
 define('SERVER',$_SERVER['SERVER_NAME']);
 
 //Helper Class
-Class Helper
+class Helper
 {
     public static function Get($index, $scope, $default = null)
     {
@@ -46,7 +46,7 @@ Class Helper
 }
 
 //Configuration Class
-Class Config
+class Config
 {
     public static $storageDir;
     public static $deletionEnabled;
@@ -57,7 +57,7 @@ Class Config
 }
 
 
-Class Shorten
+class Shorten
 {
     /* Static */
     public static $shorteners = array();
@@ -200,7 +200,7 @@ Class Shorten
     }
 }
 
-Class Statistic
+class Statistic
 {
     public $numberOfHits;
     public $entries;
@@ -213,6 +213,6 @@ Class Statistic
 }
 
 //Exceptions
-Class ShortenNotExistsException extends Exception{}
-Class ShortenAlreadyExistsException extends Exception{}
-Class IllegalCharacterException extends Exception{}
+class ShortenNotExistsException extends Exception{}
+class ShortenAlreadyExistsException extends Exception{}
+class IllegalCharacterException extends Exception{}
