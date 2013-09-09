@@ -1,6 +1,4 @@
 <?php
-echo 'test';
-
 define('SERVER',$_SERVER['SERVER_NAME']);
 
 //Helper Class
