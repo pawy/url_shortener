@@ -13,4 +13,4 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-F
 
-RewriteRule ^([a-z0-9^.]+)? shorten.php?shorten=$1 [L,QSA]
+RewriteRule ^([a-z0-9^.]+)? shorten.php?redirect=$1 [L,QSA]
