@@ -16,9 +16,10 @@ if($name = Helper::Get('redirect',$_GET))
 }
 
 //asynchronous request for statistics
-if($shorten = Helper::Get('getLog',$_POST))
+if($name = Helper::Get('getLog',$_POST))
 {
-    die((new Shorten($shorten))->getStatisticsJSON());
+    $shorten = new Shorten($name);
+    die($shorten->getStatisticsJSON());
 }
 
 //Password protection
@@ -51,11 +52,12 @@ if($url = Helper::Get('url',$_POST))
 }
 
 //delete shortened Link (depending on Config::$deletionEnabled)
-if(Config::$deletionEnabled && $toDelete = Helper::Get('delete',$_GET))
+if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
 {
     try
     {
-        (new Shorten($toDelete))->delete();
+        $shorten = new Shorten($name);
+        $shorten->delete();
         Helper::Redirect('/short');
     }
     catch(Exception $e)
@@ -119,7 +121,7 @@ if(Config::$deletionEnabled && $toDelete = Helper::Get('delete',$_GET))
     <div class="collapse navbar-collapse navbar-main-collapse" id="navbar-main">
         <ul class="nav navbar-nav">
             <?php
-            foreach(Shorten::getAllShorteners() as $shorten):
+            foreach(Shorten::GetAllShorteners() as $shorten):
                 ?>
                 <li><a href="#<?= $shorten->name ?>"><?= $shorten->name ?></a></li>
             <?php
@@ -141,7 +143,7 @@ if(Config::$deletionEnabled && $toDelete = Helper::Get('delete',$_GET))
     <form method="post" role="form" class="well">
         <div class="form-group">
             <label for="shorten">Shortened URL <small>http://<?= SERVER ?>/</small></label>
-            <input class="form-control form-control-short" onclick="select()" type="text" name="shorten" id="shorten" value="<?= Shorten::getRandomShorten() ?>" placeholder="Shortener URL..." required />
+            <input class="form-control form-control-short" onclick="select()" type="text" name="shorten" id="shorten" value="<?= Shorten::GetRandomShorten() ?>" placeholder="Shortener URL..." required />
         </div>
         <div class="form-group">
             <label for="url">URL</label>
@@ -151,7 +153,7 @@ if(Config::$deletionEnabled && $toDelete = Helper::Get('delete',$_GET))
     </form>
     <input id="search" type="search" class="form-control" placeholder="Search..." onclick="select()" />
     <?php
-    foreach(Shorten::getAllShorteners() as $shorten):
+    foreach(Shorten::GetAllShorteners() as $shorten):
         ?>
         <section id="<?= $shorten->name ?>">
             <h2>

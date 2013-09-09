@@ -1,6 +1,8 @@
 order allow,deny
 allow from all
 
+php_flag display_errors E_ALL
+
 RewriteEngine On
 AddDefaultCharset utf-8
 Options +FollowSymLinks

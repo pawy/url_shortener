@@ -1,4 +1,6 @@
 <?php
+echo 'test';
+
 define('SERVER',$_SERVER['SERVER_NAME']);
 
 //Helper Class
@@ -60,12 +62,13 @@ class Config
 class Shorten
 {
     /* Static */
-    public static $shorteners = array();
+    private static $shorteners = array();
 
-    public static function getAllShorteners()
+    public static function GetAllShorteners()
     {
-        if(count(self::$shorteners) == 0)
+        if(!self::$shorteners)
         {
+            self::$shorteners = array();
             $files = glob(Config::$storageDir . '[a-z]*');
             //filter out the logfiles, because glob is not able to return files according to REGEX properly
             $files = array_filter($files, create_function('$item', 'return !strpos($item,".");'));
@@ -85,14 +88,16 @@ class Shorten
 
     public static function Create($name, $url)
     {
-        return (new Shorten($name))->save($url);
+        $shorten = new Shorten($name);
+        return $shorten->save($url);
     }
 
     public static function Redirect($name)
     {
         try
         {
-            (new Shorten($name))->redirectToUrl();
+            $shorten = new Shorten($name);
+            $shorten->redirectToUrl();
         }
         catch(Exception $e)
         {
@@ -100,7 +105,7 @@ class Shorten
         }
     }
 
-    public static function getRandomShorten()
+    public static function GetRandomShorten()
     {
         return Helper::RandString(4);
     }
