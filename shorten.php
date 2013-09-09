@@ -76,6 +76,10 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 
     <style>
+        .container
+        {
+            margin-bottom: 50px;
+        }
         h2
         {
             font-weight: bold;

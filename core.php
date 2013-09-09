@@ -72,7 +72,7 @@ class Shorten
             $files = array_filter($files, create_function('$item', 'return !strpos($item,".");'));
 
             //Sort the array of Files, newest first
-            if(!Config::$sortAlphabetically)
+            if(Config::$sortAlphabetically == false)
                 usort($files, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
 
             foreach($files as $file)
