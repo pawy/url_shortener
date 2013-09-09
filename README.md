@@ -1,7 +1,7 @@
 url_shortener
 =============
 
-Lightweight file based url shortener in PHP
+Lightweight, file based, url shortener in PHP with OOP. Just three files needed!
 
 - Create customized shortened URLs like "yourdomain.com/link"
   - It is more personalized than using any public url-shorteners
@@ -21,13 +21,21 @@ Installation
 Configuration
 -------------
 
+To change the configuration set the values of the static Config-Class to fit your needs. 
+Find the settings in shorten.php right on top.
 - Enable Password Protection
-  - Set "$enablePasswordProtection = true;" in the shortener.php file
-  - Default password is "url_shortener" replace it with your md5 encrypted passwort
+  - Set "Config::$passwordProtected = true;"
+  - Default password is "url_shortener" replace it with your md5 encrypted passwort (set Config::$passwordMD5Encrypted)
     - To enrypt a passwort google for "md5 generator"
 - Dedicated Service
   - To use the website only for this script, uncomment the corresponding line in the .htaccess file
 - Change the storage directory
-  - define('STORAGE_DIR','s/'); change s/ to any directory you want the url and logfiles to be stored
+  - Config::$storageDir = 's/'; change s/ to any directory you want the url and logfiles to be stored
+- Sort Alphabetically
+  - Change the variable Config::$sortAlphabetically = false; to true
+  - Default sort is: newest on top
+- Load statistics asynchronous
+  - To avoid a lot of file read access on your server you can load the statistics asynchronous when needed
+  - Config::$loadStatsAsynchronous = true;
 
 Feel free to change the script to your needs and notify me if you have some improvements!
