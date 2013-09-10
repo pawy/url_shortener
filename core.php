@@ -41,7 +41,7 @@ class Helper
 
     public static function Redirect($url)
     {
-        header('Location: ' . $url);
+        die(header('Location: ' . $url));
     }
 }
 
