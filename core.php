@@ -169,10 +169,15 @@ class Shorten
     {
         $ip = $_SERVER['REMOTE_ADDR'];
 
+        // Do not track spiders
+        if($_SERVER['HTTP_USER_AGENT'] == "Jakarta Commons-HttpClient/3.1")
+            return;
+
         $statistics =
             '"' . date('d.m.Y H:i') . '";' .
             '"' . $ip . '";' .
-            '"' .$_SERVER['HTTP_USER_AGENT'] . '";';
+            '"' . $_SERVER['HTTP_USER_AGENT'] . '";' .
+            '"' . $_SERVER['HTTP_REFERER'] . '";';
 
         //Location tracking; See http://ipinfo.io
         try{
