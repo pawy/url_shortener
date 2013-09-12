@@ -27,12 +27,13 @@ class Helper
         return $str;
     }
 
-    public static function UrlGetContents ($Url) {
+    //Curl, and if it is not installed, try file_get_contents directly
+    public static function UrlGetContents ($url) {
         if (!function_exists('curl_init')){
-            throw new Exception('CURL is not installed!');
+            return file_get_contents($url);
         }
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $Url);
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $output = curl_exec($ch);
         curl_close($ch);
