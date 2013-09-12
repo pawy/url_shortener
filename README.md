@@ -11,6 +11,7 @@ Lightweight, file based, url shortener in PHP with OOP. No Database and just thr
 - easy integration in existing website
   - standard configuration for admin interface is "yourdomain.com/short"
   - you can also make a dedicated website for this service
+- API calls to create an url
 
 Installation
 ------------
