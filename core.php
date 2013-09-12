@@ -60,6 +60,7 @@ class Config
     public static $passwordMD5Encrypted;
     public static $loadStatsAsynchronous;
     public static $sortAlphabetically;
+    public static $allowAPICalls;
 }
 
 

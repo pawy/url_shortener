@@ -8,6 +8,7 @@ Config::$passwordProtected = false;
 Config::$passwordMD5Encrypted = 'bdc95b7532e651f3c140b95942851808';
 Config::$loadStatsAsynchronous = false;
 Config::$sortAlphabetically = false;
+Config::$allowAPICalls = true;
 
 //open shortened link
 if($name = Helper::Get('redirect',$_GET))
@@ -25,13 +26,13 @@ if($name = Helper::Get('getLog',$_POST))
 //API CreateCall (return JSON Encoded Shorten Object)
 //Call via /short?APICreate=THEURL
 //If passwordprotected also add &authKey=MD5ENCRYPTEDPASSWORD
-if($url = Helper::Get('APICreate',$_GET))
+if($url = Helper::Get('APICreate',$_GET) && Config::$allowAPICalls)
 {
     try
     {
-        Helper::ValidateURL($url);
         if(!Config::$passwordProtected || Helper::get('authKey',$_GET) == Config::$passwordMD5Encrypted)
         {
+            Helper::ValidateURL($url);
             $shorten = Shorten::Create(Shorten::GetRandomShorten(), $url);
             die(json_encode($shorten));
         }
