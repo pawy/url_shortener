@@ -26,7 +26,7 @@ if($name = Helper::Get('getLog',$_POST))
 //API CreateCall (return JSON Encoded Shorten Object)
 //Call via /short?APICreate=THEURL
 //If passwordprotected also add &authKey=MD5ENCRYPTEDPASSWORD
-if($url = Helper::Get('APICreate',$_GET) && Config::$allowAPICalls)
+if(($url = Helper::Get('APICreate',$_GET)) && Config::$allowAPICalls)
 {
     try
     {
@@ -41,7 +41,6 @@ if($url = Helper::Get('APICreate',$_GET) && Config::$allowAPICalls)
     {
         die($e->getMessage());
     }
-
 }
 
 //Password protection

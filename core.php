@@ -46,7 +46,8 @@ class Helper
 
     public static function ValidateURL($url)
     {
-        if(filter_var($url, FILTER_VALIDATE_URL) === false)
+        //filter_var is on older PHP version (<5.3) not trustworthy
+        if(!filter_var($url, FILTER_VALIDATE_URL))
             throw new InvalidURLException();
     }
 }
