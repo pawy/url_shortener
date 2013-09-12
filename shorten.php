@@ -194,7 +194,7 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
     endforeach;
     ?>
 </div>
-
+<div id="bottom-filler"></div>
 <!-- jQuery -->
 <script src="//code.jquery.com/jquery.min.js"></script>
 <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
@@ -281,6 +281,9 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
                 $(this).animate({backgroundColor:'red'},500).animate({backgroundColor:'white'},500);
             }
         });
+
+        $(window).resize(function(){resizeBottom();});
+        resizeBottom();
     });
 
     // Reposition the zClip's Flash overlay to catch the click
@@ -294,6 +297,11 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
             //the triggered function fires allthoug we removed the zClip, therefore we do not need to set it again
             afterCopy:function(){}
         });
+    }
+
+    //Resize the bottom filler to make the scrollspy look better
+    function resizeBottom() {
+        $('#bottom-filler').height($(window).height() - $('section').last().height() - $('nav').height());
     }
 
 </script>
