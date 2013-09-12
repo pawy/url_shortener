@@ -22,6 +22,27 @@ if($name = Helper::Get('getLog',$_POST))
     die($shorten->getStatisticsJSON());
 }
 
+//API CreateCall (return JSON Encoded Shorten Object)
+//Call via /short?APICreate=THEURL
+//If passwordprotected also add &authKey=MD5ENCRYPTEDPASSWORD
+if($url = Helper::Get('APICreate',$_GET))
+{
+    try
+    {
+        Helper::ValidateURL($url);
+        if(!Config::$passwordProtected || Helper::get('authKey',$_GET) == Config::$passwordMD5Encrypted)
+        {
+            $shorten = Shorten::Create(Shorten::GetRandomShorten(), $url);
+            die(json_encode($shorten));
+        }
+    }
+    catch(Exception $e)
+    {
+        die($e->getMessage());
+    }
+
+}
+
 //Password protection
 if(Config::$passwordProtected)
 {
@@ -42,6 +63,7 @@ if($url = Helper::Get('url',$_POST))
 {
     try
     {
+        Helper::ValidateURL($url);
         $shorten = Shorten::Create(Helper::Get('shorten',$_POST), $url);
         Helper::Redirect("/short#{$shorten->name}");
     }

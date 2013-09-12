@@ -43,6 +43,12 @@ class Helper
     {
         die(header('Location: ' . $url));
     }
+
+    public static function ValidateURL($url)
+    {
+        if(filter_var($url, FILTER_VALIDATE_URL) === false)
+            throw new InvalidURLException();
+    }
 }
 
 //Configuration Class
@@ -119,7 +125,7 @@ class Shorten
     public function __construct($name)
     {
         if(preg_match('/^[a-z ]+$/',$name) != 1)
-            throw new IllegalCharacterException("The shortened url {$name} contains illegal characters. Only a-z is allowed.");
+            throw new IllegalCharacterException($name);
 
         $this->name = $name;
         $this->shortenedLink = 'http://' . SERVER . '/' . $name;
@@ -200,7 +206,7 @@ class Shorten
     private function save($url)
     {
         if(file_exists($this->filename))
-            throw new ShortenAlreadyExistsException("Shorten url {$this->getUrl()} already exists.");
+            throw new ShortenAlreadyExistsException($this->getUrl());
 
         file_put_contents($this->filename,$url);
         file_put_contents($this->logFilename,'');
@@ -221,6 +227,31 @@ class Statistic
 }
 
 //Exceptions
-class ShortenNotExistsException extends Exception{}
-class ShortenAlreadyExistsException extends Exception{}
-class IllegalCharacterException extends Exception{}
+class ShortenNotExistsException extends Exception
+{
+    public function __construct($shortenedURL)
+    {
+        parent::__construct("Shortened url {$shortenedURL} not found");
+    }
+}
+class ShortenAlreadyExistsException extends Exception
+{
+    public function __construct($shortenedURL)
+    {
+        parent::__construct("The shortened {$shortenedURL} url already exists");
+    }
+}
+class IllegalCharacterException extends Exception
+{
+    public function __construct($shortenedURL)
+    {
+        parent::__construct("The shortened url {$shortenedURL} contains illegal characters. Only a-z is allowed.");
+    }
+}
+class InvalidURLException extends Exception
+{
+    public function __construct()
+    {
+        parent::__construct("Invalid URL");
+    }
+}
