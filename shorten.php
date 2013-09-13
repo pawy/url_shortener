@@ -130,6 +130,10 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
         {
             font-size: 10px;
         }
+        .loading-input
+        {
+            background:url('https://raw.github.com/pawy/icons/master/ajax-loader-lightgray.gif') no-repeat right center;
+        }
     </style>
 
 </head>
@@ -230,12 +234,17 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
 
         // Search
         $('#search').keyup(function() {
+            $(this).addClass('loading-input');
             $searchString = $(this).val();
             $('section').each(function() {
-                $(this).toggle($searchString.length < 2 || ($(this).attr('id').toLowerCase().indexOf($searchString.toLowerCase()) > 0))
+                if($(this).attr('id').toLowerCase().indexOf($searchString.toLowerCase()) >= 0)
+                    $(this).show(500);
+                else
+                    $(this).hide(500);
             });
             setTimeout(function(){
                 setZclip();
+                $('#search').removeClass('loading-input');
             }, 500 );
         });
 
