@@ -231,9 +231,8 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
         // Search
         $('#search').keyup(function() {
             $searchString = $(this).val();
-
             $('section').each(function() {
-                $(this).toggle(($(this).attr('id').toLowerCase().indexOf($searchString.toLowerCase()) > 0))
+                $(this).toggle($searchString.length < 2 || ($(this).attr('id').toLowerCase().indexOf($searchString.toLowerCase()) > 0))
             });
             setTimeout(function(){
                 setZclip();
