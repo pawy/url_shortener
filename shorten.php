@@ -224,7 +224,8 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
 <!-- jQuery -->
 <script src="//code.jquery.com/jquery.min.js"></script>
 <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-<script src="http://www.steamdev.com/zclip/js/jquery.zclip.min.js"></script>
+<!--<script src="http://www.steamdev.com/zclip/js/jquery.zclip.min.js"></script>-->
+<script src="<?= Config::$storageDir ?>jquery.zclip.min.js"></script>
 
 <!-- Bootstrap: Latest compiled and minified JavaScript -->
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
@@ -297,7 +298,7 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
         // Copy to Clipboard using Jquery ZClip plugin; see http://www.steamdev.com/zclip/
         $('input.shorten').zclip({
             setHandCursor: false,
-            path:'http://davidwalsh.name/demo/ZeroClipboard.swf',
+            path:'<?= Config::$storageDir ?>ZeroClipboard.swf',
             copy:function(){return $(this).val();},
             afterCopy:function(){
                 $this = $(this);
@@ -320,7 +321,8 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
         $('input.shorten').zclip('remove');
         $('input.shorten').zclip({
             setHandCursor: false,
-            path:'http://davidwalsh.name/demo/ZeroClipboard.swf',
+            //path:'http://davidwalsh.name/demo/ZeroClipboard.swf',
+            path:'<?= Config::$storageDir ?>ZeroClipboard.swf',
             copy:function(){return $(this).val();},
             //the triggered function fires allthoug we removed the zClip, therefore we do not need to set it again
             afterCopy:function(){}
