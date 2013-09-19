@@ -239,9 +239,15 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
             $searchString = $(this).val();
             $('section').each(function() {
                 if($(this).attr('id').toLowerCase().indexOf($searchString.toLowerCase()) >= 0)
+                {
                     $(this).show(500);
+                    $('a[href=#' + $(this).attr('id') + ']').show();
+                }
                 else
+                {
                     $(this).hide(500);
+                    $('a[href=#' + $(this).attr('id') + ']').hide();
+                }
             });
             setTimeout(function(){
                 setZclip();
