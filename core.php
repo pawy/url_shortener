@@ -95,14 +95,12 @@ class Shorten
 
     public static function ValidateShorten($shorten)
     {
-        if(!preg_match($shorten,'/^[A-Za-z0-9_]+$/'))
+        if(preg_match('/^[A-Za-z0-9_]+$/', $shorten) != 1)
             throw new InvalidShortenException();
     }
 
     public static function Create($name, $url)
     {
-        Helper::ValidateURL($url);
-        Shorten::ValidateShorten($name);
         $shorten = new Shorten($name);
         return $shorten->save($url);
     }
@@ -135,8 +133,7 @@ class Shorten
 
     public function __construct($name)
     {
-        if(preg_match('/^[a-z ]+$/',$name) != 1)
-            throw new IllegalCharacterException($name);
+        Shorten::ValidateShorten($name);
 
         $this->name = $name;
         $this->shortenedLink = 'http://' . SERVER . '/' . $name;
@@ -216,6 +213,8 @@ class Shorten
 
     private function save($url)
     {
+        Helper::ValidateURL($url);
+
         if(file_exists($this->filename))
             throw new ShortenAlreadyExistsException($this->getUrl());
 
