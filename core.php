@@ -93,8 +93,16 @@ class Shorten
         return self::$shorteners;
     }
 
+    public static function ValidateShorten($shorten)
+    {
+        if(!preg_match($shorten,'/^[A-Za-z0-9_]+$/'))
+            throw new InvalidShortenException();
+    }
+
     public static function Create($name, $url)
     {
+        Helper::ValidateURL($url);
+        Shorten::ValidateShorten($name);
         $shorten = new Shorten($name);
         return $shorten->save($url);
     }
@@ -256,5 +264,12 @@ class InvalidURLException extends Exception
     public function __construct()
     {
         parent::__construct("Invalid URL");
+    }
+}
+class InvalidShortenException extends Exception
+{
+    public function __construct()
+    {
+        parent::__construct("Invalid Shortened URL, please only use alphanumeric characters.");
     }
 }

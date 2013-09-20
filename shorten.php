@@ -63,8 +63,8 @@ if($url = Helper::Get('url',$_POST))
 {
     try
     {
-        Helper::ValidateURL($url);
-        $shorten = Shorten::Create(Helper::Get('shorten',$_POST), $url);
+        $shorten = Helper::Get('shorten',$_POST);
+        $shorten = Shorten::Create($shorten, $url);
         Helper::Redirect("/short#{$shorten->name}");
     }
     catch(Exception $e)
