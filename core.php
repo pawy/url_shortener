@@ -237,8 +237,11 @@ class Shorten
 
     public function delete()
     {
-        unlink($this->logFilename);
-        unlink($this->filename);
+        if(file_exists($this->filename))
+            unlink($this->logFilename);
+        if(file_exists($this->logFilename))
+            unlink($this->filename);
+
         if(Config::$publicCookies)
         {
             CookieHandler::RemoveShortener($this->name);
@@ -271,7 +274,7 @@ class Shorten
     protected function redirectToUrl()
     {
         if(!file_exists($this->filename))
-            throw new ShortenNotExistsException();
+            throw new ShortenNotExistsException($this->name);
         $this->track();
         Helper::Redirect($this->getUrl());
     }
@@ -313,7 +316,7 @@ class Shorten
         Helper::ValidateURL($url);
 
         if(file_exists($this->filename))
-            throw new ShortenAlreadyExistsException($this->getUrl());
+            throw new ShortenAlreadyExistsException($this->name);
 
         file_put_contents($this->filename,$url);
         file_put_contents($this->logFilename,'');
@@ -362,7 +365,7 @@ class ShortenAlreadyExistsException extends Exception
 {
     public function __construct($shortenedURL)
     {
-        parent::__construct("The shortened {$shortenedURL} url already exists");
+        parent::__construct("The shortened  url {$shortenedURL} already exists");
     }
 }
 
