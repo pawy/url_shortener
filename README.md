@@ -38,6 +38,43 @@ Find the settings in shorten.php right on top.
 - Load statistics asynchronous
   - To avoid a lot of file read access on your server you can load the statistics asynchronous when needed
   - Config::$loadStatsAsynchronous = true;
+- If you want to use the Tool for publicity, then you should consider not showing all shorteners to everyone but instead show them cookie based
+  - Enable it via Config::$publicCookies = true;
+
+Excerp from core.php explanation of Config Class
+
+    /**
+     * @var The Folder to store the link and logfiles //for non DB use
+     */
+    public static $storageDir;
+    /**
+     * @var Enable oder disable the delete button
+     */
+    public static $deletionEnabled;
+    /**
+     * @var Protect the overview site with a password (redirection will work anyway)
+     */
+    public static $passwordProtected;
+    /**
+     * @var Set the password (as md5 encrypted)
+     */
+    public static $passwordMD5Encrypted;
+    /**
+     * @var Load the statistics asynchronously when clicking on the ? - button. This will reduce server read access to logfiles
+     */
+    public static $loadStatsAsynchronous;
+    /**
+     * @var Sort the shortened URLs alphabetically, otherwise they are sorted by creation date
+     */
+    public static $sortAlphabetically;
+    /**
+     * @var Allow API-Calls to create shortened URLs by HTTP-GET-Request, this service will also be password protected if the site is
+     */
+    public static $allowAPICalls;
+    /**
+     * @var If you want to make the site public, show each visitor only the shortener URLs that he/she created by saving them to a cookie
+     */
+    public static $publicCookies;
 
 API Call
 --------
