@@ -373,7 +373,7 @@ class IllegalCharacterException extends Exception
 {
     public function __construct($shortenedURL)
     {
-        parent::__construct("The shortened url {$shortenedURL} contains illegal characters. Only a-z is allowed.");
+        parent::__construct("The shortened url {$shortenedURL} contains illegal characters. Only a-z, A-Z, 0-9 and _ is allowed.");
     }
 }
 
