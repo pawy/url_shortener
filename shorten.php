@@ -1,7 +1,8 @@
 <?php
+error_reporting(E_ALL);
 require_once(dirname(__FILE__) . '/core.php');
 
-//configure
+//configure -> see core.php Config Class for explanation
 Config::$storageDir = 's/';
 Config::$deletionEnabled = true;
 Config::$passwordProtected = false;
@@ -9,18 +10,12 @@ Config::$passwordMD5Encrypted = 'bdc95b7532e651f3c140b95942851808';
 Config::$loadStatsAsynchronous = false;
 Config::$sortAlphabetically = false;
 Config::$allowAPICalls = true;
+Config::$publicCookies = false;
 
 //open shortened link
 if($name = Helper::Get('redirect',$_GET))
 {
     Shorten::Redirect($name);
-}
-
-//asynchronous request for statistics
-if($name = Helper::Get('getLog',$_POST))
-{
-    $shorten = new Shorten($name);
-    die($shorten->getStatisticsJSON());
 }
 
 //API CreateCall (return JSON Encoded Shorten Object)
@@ -41,6 +36,13 @@ if(($url = Helper::Get('APICreate',$_GET)) && Config::$allowAPICalls)
     {
         die($e->getMessage());
     }
+}
+
+//asynchronous request for statistics
+if($name = Helper::Get('getLog',$_POST))
+{
+    $shorten = new Shorten($name);
+    die($shorten->getStatisticsJSON());
 }
 
 //Password protection

@@ -1,7 +1,9 @@
 <?php
 define('SERVER',$_SERVER['SERVER_NAME']);
 
-//Helper Class
+/**
+ * Class Helper
+ */
 class Helper
 {
     public static function Get($index, $scope, $default = null)
@@ -17,7 +19,13 @@ class Helper
         return $default;
     }
 
-    public static function RandString($length, $charset='abcdefghijklmnopqrstuvwxyz')
+    /**
+     * Also check Shorten::ValidateShorten() to make sure to use the same characters, also check the .htaccess for the valid characters
+     * @param $length
+     * @param string $charset
+     * @return string
+     */
+    public static function RandString($length, $charset='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_')
     {
         $str = '';
         $count = strlen($charset);
@@ -27,7 +35,12 @@ class Helper
         return $str;
     }
 
-    //Curl, and if it is not installed, try file_get_contents directly
+    /**
+     * Function is using Curl, and if it is not installed, try file_get_contents directly
+     * This function is used for asynchronous requests
+     * @param $url
+     * @return mixed|string (the content of the url
+     */
     public static function UrlGetContents ($url) {
         if (!function_exists('curl_init')){
             return file_get_contents($url);
@@ -53,19 +66,88 @@ class Helper
     }
 }
 
-//Configuration Class
+/**
+ * Class Config
+ */
 class Config
 {
+    /**
+     * @var The Folder to store the link and logfiles //for non DB use
+     */
     public static $storageDir;
+    /**
+     * @var Enable oder disable the delete button
+     */
     public static $deletionEnabled;
+    /**
+     * @var Protect the overview site with a password (redirection will work anyway)
+     */
     public static $passwordProtected;
+    /**
+     * @var Set the password (as md5 encrypted)
+     */
     public static $passwordMD5Encrypted;
+    /**
+     * @var Load the statistics asynchronously when clicking on the ? - button. This will reduce server read access to logfiles
+     */
     public static $loadStatsAsynchronous;
+    /**
+     * @var Sort the shortened URLs alphabetically, otherwise they are sorted by creation date
+     */
     public static $sortAlphabetically;
+    /**
+     * @var Allow API-Calls to create shortened URLs by HTTP-GET-Request, this service will also be password protected if the site is
+     */
     public static $allowAPICalls;
+    /**
+     * @var If you want to make the site public, show each visitor only the shortener URLs that he/she created by saving them to a cookie
+     */
+    public static $publicCookies;
 }
 
+/**
+ * Class CookieHandler
+ */
+class CookieHandler
+{
+    private static $cookieName = 'shorteners';
+    private static $expires = 7776000000;
 
+    /**
+     * @return array The Shorteners names
+     */
+    public static function GetShorteners()
+    {
+        return explode(',',self::GetCookieValue(),-1);
+    }
+
+    private static function GetCookieValue()
+    {
+        return Helper::Get(self::$cookieName,$_COOKIE,'');
+    }
+
+    /**
+     * @param $name Add a new shortener to the cookie
+     */
+    public static function AddShortener($name)
+    {
+        $values = $name . ',' . self::GetCookieValue();
+        setcookie(self::$cookieName,$values,self::$expires);
+    }
+
+    /**
+     * @param $name Remove this shortener from the cookie
+     */
+    public static function RemoveShortener($name)
+    {
+        $values = str_replace($name . ',','',self::GetCookieValue());
+        setcookie(self::$cookieName,$values,self::$expires);
+    }
+}
+
+/**
+ * Class Shorten
+ */
 class Shorten
 {
     /* Static */
@@ -76,18 +158,31 @@ class Shorten
         if(!self::$shorteners)
         {
             self::$shorteners = array();
-            $files = glob(Config::$storageDir . '[a-z]*');
-            //filter out the logfiles, because glob is not able to return files according to REGEX properly
-            $files = array_filter($files, create_function('$item', 'return !strpos($item,".");'));
 
-            //Sort the array of Files, newest first
-            if(Config::$sortAlphabetically == false)
-                usort($files, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
-
-            foreach($files as $file)
+            //Load the shorteners from cookie
+            if(Config::$publicCookies)
             {
-                $name = substr($file,strlen(Config::$storageDir));
-                self::$shorteners[] = new Shorten($name);
+                foreach(CookieHandler::GetShorteners() as $shorten)
+                {
+                    self::$shorteners[] = new Shorten($shorten);
+                }
+            }
+            //Load the shorteners file based
+            else
+            {
+                $files = glob(Config::$storageDir . '[a-z]*');
+                //filter out the logfiles, because glob is not able to return files according to REGEX properly
+                $files = array_filter($files, create_function('$item', 'return !strpos($item,".");'));
+
+                //Sort the array of Files, newest first
+                if(Config::$sortAlphabetically == false)
+                    usort($files, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
+
+                foreach($files as $file)
+                {
+                    $name = substr($file,strlen(Config::$storageDir));
+                    self::$shorteners[] = new Shorten($name);
+                }
             }
         }
         return self::$shorteners;
@@ -134,7 +229,6 @@ class Shorten
     public function __construct($name)
     {
         Shorten::ValidateShorten($name);
-
         $this->name = $name;
         $this->shortenedLink = 'http://' . SERVER . '/' . $name;
         $this->filename = Config::$storageDir . $name;
@@ -145,6 +239,10 @@ class Shorten
     {
         unlink($this->logFilename);
         unlink($this->filename);
+        if(Config::$publicCookies)
+        {
+            CookieHandler::RemoveShortener($this->name);
+        }
     }
 
     public function getUrl()
@@ -174,7 +272,6 @@ class Shorten
     {
         if(!file_exists($this->filename))
             throw new ShortenNotExistsException();
-
         $this->track();
         Helper::Redirect($this->getUrl());
     }
@@ -220,10 +317,21 @@ class Shorten
 
         file_put_contents($this->filename,$url);
         file_put_contents($this->logFilename,'');
+
+        if(Config::$publicCookies)
+        {
+            CookieHandler::AddShortener($this->name);
+        }
+
         return $this;
     }
 }
 
+// -- Exceptions --
+
+/**
+ * Class Statistic
+ */
 class Statistic
 {
     public $numberOfHits;
@@ -236,7 +344,9 @@ class Statistic
     }
 }
 
-//Exceptions
+/**
+ * Class ShortenNotExistsException
+ */
 class ShortenNotExistsException extends Exception
 {
     public function __construct($shortenedURL)
@@ -244,6 +354,10 @@ class ShortenNotExistsException extends Exception
         parent::__construct("Shortened url {$shortenedURL} not found");
     }
 }
+
+/**
+ * Class ShortenAlreadyExistsException
+ */
 class ShortenAlreadyExistsException extends Exception
 {
     public function __construct($shortenedURL)
@@ -251,6 +365,10 @@ class ShortenAlreadyExistsException extends Exception
         parent::__construct("The shortened {$shortenedURL} url already exists");
     }
 }
+
+/**
+ * Class IllegalCharacterException
+ */
 class IllegalCharacterException extends Exception
 {
     public function __construct($shortenedURL)
@@ -258,6 +376,10 @@ class IllegalCharacterException extends Exception
         parent::__construct("The shortened url {$shortenedURL} contains illegal characters. Only a-z is allowed.");
     }
 }
+
+/**
+ * Class InvalidURLException
+ */
 class InvalidURLException extends Exception
 {
     public function __construct()
@@ -265,6 +387,10 @@ class InvalidURLException extends Exception
         parent::__construct("Invalid URL");
     }
 }
+
+/**
+ * Class InvalidShortenException
+ */
 class InvalidShortenException extends Exception
 {
     public function __construct()
