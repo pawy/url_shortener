@@ -40,6 +40,8 @@ Find the settings in shorten.php right on top.
   - Config::$loadStatsAsynchronous = true;
 - If you want to use the Tool for publicity, then you should consider not showing all shorteners to everyone but instead show them cookie based
   - Enable it via Config::$publicCookies = true;
+- You can let the user choose the shortened url or always use a generated one
+- You can limit the display to only show the latest 10 (when not sorted alphabetically). This in either the file based mode or the cookie mode.
 
 Excerp from core.php explanation of Config Class
 
@@ -68,6 +70,10 @@ Excerp from core.php explanation of Config Class
      */
     public static $sortAlphabetically;
     /**
+     * @var Show only the last n shortened URLs, this only works when alphabetic order is disabled (0 means no limit)
+     */
+    public static $limitDisplayedShorten;
+    /**
      * @var Allow API-Calls to create shortened URLs by HTTP-GET-Request, this service will also be password protected if the site is
      */
     public static $allowAPICalls;
@@ -75,6 +81,10 @@ Excerp from core.php explanation of Config Class
      * @var If you want to make the site public, show each visitor only the shortener URLs that he/she created by saving them to a cookie
      */
     public static $publicCookies;
+    /**
+     * @var Show the textfield to freely choose the shortened url (otherwise its hidden and a random shortened url will alway be used)
+     */
+    public static $choosableShorten;
 
 API Call
 --------
