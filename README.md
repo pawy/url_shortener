@@ -19,6 +19,12 @@ Installation
   a If you already have a directory called s you can rename the storage folder to anything you like
 2. Congratulations, you're done!
 
+
+DEMO
+----
+
+www.doubleu.ch
+
 Configuration
 -------------
 
