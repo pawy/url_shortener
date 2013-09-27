@@ -183,10 +183,11 @@ class Shorten
             //Load the shorteners from cookie
             if(Config::$publicCookies)
             {
-                foreach(CookieHandler::GetShorteners() as $shorten)
+                foreach(CookieHandler::GetShorteners() as $name)
                 {
+                    $shorten = new Shorten($name);
                     if(file_exists($shorten->filename))
-                        self::$shorteners[] = new Shorten($shorten);
+                        self::$shorteners[] = $shorten;
                 }
             }
             //Load the shorteners file based
