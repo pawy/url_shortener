@@ -241,14 +241,17 @@ class Shorten
 
     public static function GetRandomShortenName()
     {
-        while(file_exists((new Shorten($x = Helper::RandString(4)))->filename)){}
-        return $x;
+        $shorten = new Shorten(Helper::RandString(5));
+        while(file_exists($shorten->filename)){
+            $shorten = new Shorten(Helper::RandString(5));
+        }
+        return $shorten->name;
     }
 
     /* Class members */
     public $name;
     public $shortenedLink;
-    private $filename;
+    public $filename;
     private $logFilename;
     private $url;
     private $statistic;
