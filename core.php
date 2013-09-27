@@ -103,6 +103,10 @@ class Config
      * @var If you want to make the site public, show each visitor only the shortener URLs that he/she created by saving them to a cookie
      */
     public static $publicCookies;
+    /**
+     * @var Show the textfield to freely choose the shortened url (otherwise its hidden and a random shortened url will alway be used)
+     */
+    public static $choosableShorten;
 }
 
 /**
@@ -213,9 +217,10 @@ class Shorten
         }
     }
 
-    public static function GetRandomShorten()
+    public static function GetRandomShortenName()
     {
-        return Helper::RandString(4);
+        while(file_exists((new Shorten($x = Helper::RandString(4)))->filename)){}
+        return $x;
     }
 
     /* Class members */

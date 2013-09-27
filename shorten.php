@@ -11,6 +11,7 @@ Config::$loadStatsAsynchronous = false;
 Config::$sortAlphabetically = false;
 Config::$allowAPICalls = true;
 Config::$publicCookies = false;
+Config::$choosableShorten = false;
 
 //open shortened link
 if($name = Helper::Get('redirect',$_GET))
@@ -28,7 +29,7 @@ if(($url = Helper::Get('APICreate',$_GET)) && Config::$allowAPICalls)
         if(!Config::$passwordProtected || Helper::get('authKey',$_GET) == Config::$passwordMD5Encrypted)
         {
             Helper::ValidateURL($url);
-            $shorten = Shorten::Create(Shorten::GetRandomShorten(), $url);
+            $shorten = Shorten::Create(Shorten::GetRandomShortenName(), $url);
             die(json_encode($shorten));
         }
     }
@@ -65,8 +66,8 @@ if($url = Helper::Get('url',$_POST))
 {
     try
     {
-        $shorten = Helper::Get('shorten',$_POST);
-        $shorten = Shorten::Create($shorten, $url);
+        $name = Helper::Get('shorten',$_POST,Shorten::GetRandomShortenName());
+        $shorten = Shorten::Create($name, $url);
         Helper::Redirect("/short#{$shorten->name}");
     }
     catch(Exception $e)
@@ -173,10 +174,12 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
     endif;
     ?>
     <form method="post" role="form" class="well">
+    <?php if(Config::$choosableShorten): ?>
         <div class="form-group">
             <label for="shorten">Shortened URL <small>http://<?= SERVER ?>/</small></label>
-            <input class="form-control form-control-short" onclick="select()" type="text" name="shorten" id="shorten" value="<?= Shorten::GetRandomShorten() ?>" placeholder="Shortener URL..." required />
+            <input class="form-control form-control-short" onclick="select()" type="text" name="shorten" id="shorten" value="<?= Shorten::GetRandomShortenName() ?>" placeholder="Shortener URL..." required />
         </div>
+    <?php endif; ?>
         <div class="form-group">
             <label for="url">URL</label>
             <input class="form-control" type="url" name="url" id="url" placeholder="Target URL..." required />
