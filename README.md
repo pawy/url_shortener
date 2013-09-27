@@ -25,17 +25,19 @@ Configuration
 To change the configuration set the values of the static Config-Class to fit your needs. 
 Find the settings in shorten.php right on top.
 
-//configure -> see core.php Config Class for explanation
-Config::$storageDir = 's/';
-Config::$deletionEnabled = true;
-Config::$passwordProtected = false;
-Config::$passwordMD5Encrypted = 'bdc95b7532e651f3c140b95942851808';
-Config::$loadStatsAsynchronous = false;
-Config::$sortAlphabetically = false;
-Config::$limitDisplayedShorten = 0;
-Config::$allowAPICalls = true;
-Config::$publicCookies = false;
-Config::$choosableShorten = false;
+  ```
+  //configure -> see core.php Config Class for explanation
+  Config::$storageDir = 's/';
+  Config::$deletionEnabled = true;
+  Config::$passwordProtected = false;
+  Config::$passwordMD5Encrypted = 'bdc95b7532e651f3c140b95942851808';
+  Config::$loadStatsAsynchronous = false;
+  Config::$sortAlphabetically = false;
+  Config::$limitDisplayedShorten = 0;
+  Config::$allowAPICalls = true;
+  Config::$publicCookies = false;
+  Config::$choosableShorten = false;
+  ```
 
 - Enable Password Protection
   - Set "Config::$passwordProtected = true;"
@@ -58,6 +60,7 @@ Config::$choosableShorten = false;
 
 Excerp from core.php explanation of Config Class
 
+    ```
     /**
      * @var The Folder to store the link and logfiles //for non DB use
      */
@@ -98,6 +101,7 @@ Excerp from core.php explanation of Config Class
      * @var Show the textfield to freely choose the shortened url (otherwise its hidden and a random shortened url will alway be used)
      */
     public static $choosableShorten;
+    ```
 
 API Call
 --------
