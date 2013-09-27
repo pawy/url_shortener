@@ -298,6 +298,11 @@ class Shorten
         return (json_encode($this->getStatistics()));
     }
 
+    public function getCreationDate()
+    {
+        return date('d.M.y H:i',filemtime($this->filename));
+    }
+
     protected function redirectToUrl()
     {
         if(!file_exists($this->filename))

@@ -206,6 +206,7 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
                         <?= Config::$loadStatsAsynchronous ? '?' : $shorten->getStatistics()->numberOfHits ?>
                     </span>
                 </a>
+                <small class="text-muted"><?= $shorten->getCreationDate() ?></small>
                 <?= $shorten->getUrl() ?>
                 <a class="margin-left-10" href="<?= $shorten->getUrl() ?>" target="_blank" title="Open the URL">
                     <span class="glyphicon glyphicon-tag"></span>
