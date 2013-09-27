@@ -281,17 +281,19 @@ class Shorten
 
     private function track()
     {
-        $ip = $_SERVER['REMOTE_ADDR'];
+        $ip = Helper::Get('REMOTE_ADDR', $_SERVER);
+        $referer = Helper::Get('HTTP_REFERER', $_SERVER);
+        $userAgent = Helper::Get('HTTP_USER_AGENT', $_SERVER);
 
         // Do not track spiders
-        if($_SERVER['HTTP_USER_AGENT'] == "Jakarta Commons-HttpClient/3.1")
+        if($userAgent == "Jakarta Commons-HttpClient/3.1")
             return;
 
         $statistics =
             '"' . date('d.m.Y H:i') . '";' .
             '"' . $ip . '";' .
-            '"' . $_SERVER['HTTP_USER_AGENT'] . '";' .
-            '"' . $_SERVER['HTTP_REFERER'] . '";';
+            '"' . $userAgent . '";' .
+            '"' . $referer . '";';
 
         //Location tracking; See http://ipinfo.io
         try{
