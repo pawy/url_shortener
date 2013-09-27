@@ -96,6 +96,10 @@ class Config
      */
     public static $sortAlphabetically;
     /**
+     * @var Show only the last n shortened URLs, this only works when alphabetic order is disabled (0 means no limit)
+     */
+    public static $limitDisplayedShorten;
+    /**
      * @var Allow API-Calls to create shortened URLs by HTTP-GET-Request, this service will also be password protected if the site is
      */
     public static $allowAPICalls;
@@ -122,7 +126,20 @@ class CookieHandler
      */
     public static function GetShorteners()
     {
-        return explode(',',self::GetCookieValue(),-1);
+        $array = null;
+
+        if(Config::$limitDisplayedShorten > 0 && !Config::$sortAlphabetically)
+            $array = explode(',',self::GetCookieValue(),Config::$limitDisplayedShorten + 1);
+        else
+            $array = explode(',',self::GetCookieValue());
+
+        array_pop($array);
+
+        //Sort alphabetically
+        if(Config::$sortAlphabetically)
+            sort($array,SORT_NATURAL | SORT_FLAG_CASE);
+
+        return $array;
     }
 
     private static function GetCookieValue()
@@ -174,13 +191,18 @@ class Shorten
             //Load the shorteners file based
             else
             {
-                $files = glob(Config::$storageDir . '[a-z]*');
+                $files = glob(Config::$storageDir . '[a-zA-Z0-9_]*');
                 //filter out the logfiles, because glob is not able to return files according to REGEX properly
                 $files = array_filter($files, create_function('$item', 'return !strpos($item,".");'));
 
                 //Sort the array of Files, newest first
-                if(Config::$sortAlphabetically == false)
+                if(!Config::$sortAlphabetically)
+                {
                     usort($files, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
+                    //Limit the array
+                    if(Config::$limitDisplayedShorten)
+                        $files = array_slice($files,0,Config::$limitDisplayedShorten);
+                }
 
                 foreach($files as $file)
                 {
