@@ -24,6 +24,19 @@ Configuration
 
 To change the configuration set the values of the static Config-Class to fit your needs. 
 Find the settings in shorten.php right on top.
+
+//configure -> see core.php Config Class for explanation
+Config::$storageDir = 's/';
+Config::$deletionEnabled = true;
+Config::$passwordProtected = false;
+Config::$passwordMD5Encrypted = 'bdc95b7532e651f3c140b95942851808';
+Config::$loadStatsAsynchronous = false;
+Config::$sortAlphabetically = false;
+Config::$limitDisplayedShorten = 0;
+Config::$allowAPICalls = true;
+Config::$publicCookies = false;
+Config::$choosableShorten = false;
+
 - Enable Password Protection
   - Set "Config::$passwordProtected = true;"
   - Default password is "url_shortener" replace it with your md5 encrypted passwort (set Config::$passwordMD5Encrypted)
