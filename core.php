@@ -191,23 +191,25 @@ class Shorten
             //Load the shorteners file based
             else
             {
-                $files = glob(Config::$storageDir . '[a-zA-Z0-9_]*');
-                //filter out the logfiles, because glob is not able to return files according to REGEX properly
-                $files = array_filter($files, create_function('$item', 'return !strpos($item,".");'));
-
-                //Sort the array of Files, newest first
-                if(!Config::$sortAlphabetically)
+                if($files = glob(Config::$storageDir . '[a-zA-Z0-9_]*'))
                 {
-                    usort($files, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
-                    //Limit the array
-                    if(Config::$limitDisplayedShorten)
-                        $files = array_slice($files,0,Config::$limitDisplayedShorten);
-                }
+                    //filter out the logfiles, because glob is not able to return files according to REGEX properly
+                    $files = array_filter($files, create_function('$item', 'return !strpos($item,".");'));
 
-                foreach($files as $file)
-                {
-                    $name = substr($file,strlen(Config::$storageDir));
-                    self::$shorteners[] = new Shorten($name);
+                    //Sort the array of Files, newest first
+                    if(!Config::$sortAlphabetically)
+                    {
+                        usort($files, create_function('$a,$b', 'return filemtime($b) - filemtime($a);'));
+                        //Limit the array
+                        if(Config::$limitDisplayedShorten)
+                            $files = array_slice($files,0,Config::$limitDisplayedShorten);
+                    }
+
+                    foreach($files as $file)
+                    {
+                        $name = substr($file,strlen(Config::$storageDir));
+                        self::$shorteners[] = new Shorten($name);
+                    }
                 }
             }
         }
