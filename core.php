@@ -237,9 +237,9 @@ class Shorten
 
     public function delete()
     {
-        if(file_exists($this->filename))
-            unlink($this->logFilename);
         if(file_exists($this->logFilename))
+            unlink($this->logFilename);
+        if(file_exists($this->filename))
             unlink($this->filename);
 
         if(Config::$publicCookies)
