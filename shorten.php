@@ -186,6 +186,7 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
             <input class="form-control" type="url" name="url" id="url" placeholder="Target URL..." required />
         </div>
         <input type="submit" class="btn btn-primary" value="Shorten URL" />
+        <small class="pull-right text-muted">Get your own shortener service <a href="https://github.com/pawy/url_shortener">@github</a></small>
     </form>
     <input id="search" type="search" class="form-control" placeholder="Search..." onclick="select()" />
     <?php
