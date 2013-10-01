@@ -1,7 +1,7 @@
 url_shortener
 =============
 
-Lightweight, file based, url shortener in PHP with OOP. No Database and just three files needed!
+Lightweight, file based, url shortener in PHP with OOP and Bootstrap-UI. No Database and just three files needed!
 
 - Create customized shortened URLs like "yourdomain.com/link"
   - It is more personalized than using any public url-shorteners
