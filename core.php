@@ -335,6 +335,8 @@ class Shorten
             '"' . $referer . '";';
 
         //Location tracking; See http://ipinfo.io
+        //This is very slow, deactivate it!
+        /*
         try{
             $geoLocation = json_decode(Helper::UrlGetContents("http://ipinfo.io/{$ip}/json"));
             if(is_object($geoLocation))
@@ -348,7 +350,7 @@ class Shorten
                     '"' . $geoLocation->hostname . '";';
             }
         }catch(Exception $e){}
-
+        */
         file_put_contents($this->logFilename, $statistics . "\n", FILE_APPEND);
     }
 
