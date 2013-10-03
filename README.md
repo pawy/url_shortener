@@ -115,7 +115,7 @@ API Call
 To create an Shortened URL via a HTTP GET Call with the attribute "APICreate".
 If you have your generator passwort protected also provide the md5 encrypted passwort with "authKey".
 
-Example: http://URL/short?APICreate=http://www.google.ch&authKey=bdc95b7532e651f3c140b95942851808
+Example: [http://doubleu.ch/short?APICreate=http://www.google.ch&authKey=bdc95b7532e651f3c140b95942851808](http://doubleu.ch/short?APICreate=http://www.google.ch&authKey=bdc95b7532e651f3c140b95942851808)
 
 The Result is a JSON Object {name, shortenedLink} containing the shortened URL.
 
