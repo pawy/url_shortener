@@ -175,7 +175,7 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
 </nav>
 
 <div class="container">
-    <h1><?= strtoupper(SERVER) ?> <small>URL shortener</small></h1>
+    <h1><link rel="icon" type="image/png" href="https://raw.github.com/pawy/icons/master/sUrl_icons/1_Desktop_Icons/icon_048.png" /><?= strtoupper(SERVER) ?> <small>URL shortener</small></h1>
     <?php
     if(isset($message)):
         ?>
