@@ -43,7 +43,7 @@ if(($url = Helper::Get('APICreate',$_GET)) && Config::$allowAPICalls)
 //API Service Alive Request
 if(Helper::Get('APIVersion',$_GET))
 {
-    die(json_encode(array("V" => "1.0")));
+    die(json_encode(array("V" => 1.0)));
 }
 
 
