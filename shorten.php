@@ -108,6 +108,8 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 
+    <link rel="icon" type="image/png" href="https://raw.github.com/pawy/icons/master/sUrl_icons/1_Desktop_Icons/icon_016.png" />
+
     <style>
         .container
         {
