@@ -25,6 +25,14 @@ DEMO
 
 www.doubleu.ch
 
+Chrome Extension
+----------------
+
+There is a chrome extension available to directly shorten the current url with just one click.
+http://pawy.net/chromext
+
+The source is available here: https://github.com/pawy/url_shortener_chrome_extension
+
 Configuration
 -------------
 
