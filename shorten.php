@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
 require_once(dirname(__FILE__) . '/core.php');
-require_once(dirname(__FILE__). '/config.php');
+require_once(dirname(__FILE__) . '/config.php');
 
 //open shortened link
 if($name = Helper::Get('redirect',$_GET))
