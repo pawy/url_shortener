@@ -7,6 +7,7 @@ RewriteEngine On
 AddDefaultCharset utf-8
 Options +FollowSymLinks
 
+RewriteRule ^APIVersion$ /shorten.php?APIVersion=test [L,QSA]
 RewriteRule ^short$ /shorten.php [L,QSA]
 # Uncomment the line below if you have nothing else on this domain and the shorten script is your default page
 RewriteRule ^$ /shorten.php [L,QSA]
