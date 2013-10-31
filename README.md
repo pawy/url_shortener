@@ -122,7 +122,7 @@ API Call
 To create an Shortened URL via a RESTful API with the attribute "APICreate".
 If you have your generator passwort protected also provide the md5 encrypted passwort with "authKey".
 
-Check the Version of the API via [http://doubleu.ch?APIVersion=test](http://doubleu.ch?APIVersion=test)
+Check the Version of the API via [http://doubleu.ch/APIVersion](http://doubleu.ch/APIVersion)
 
 The Result is a JSON Object {name, shortenedLink} containing the shortened URL.
 
