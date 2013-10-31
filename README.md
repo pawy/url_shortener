@@ -16,7 +16,6 @@ Lightweight, file based, url shortener in PHP with OOP and Bootstrap-UI. No Data
 Installation
 ------------
 1. Copy the files into your root directory
-  a If you already have a directory called s you can rename the storage folder to anything you like
 2. Congratulations, you're done!
 
 
@@ -37,7 +36,7 @@ Configuration
 -------------
 
 To change the configuration set the values of the static Config-Class to fit your needs. 
-Find the settings in shorten.php right on top.
+Find the settings in config.php right on top.
 
   ```
   //configure -> see core.php Config Class for explanation
@@ -120,10 +119,10 @@ Excerp from core.php explanation of Config Class
 API Call
 --------
 
-To create an Shortened URL via a HTTP GET Call with the attribute "APICreate".
+To create an Shortened URL via a RESTful API with the attribute "APICreate".
 If you have your generator passwort protected also provide the md5 encrypted passwort with "authKey".
 
-Example: [http://doubleu.ch/short?APICreate=http://www.google.ch&authKey=bdc95b7532e651f3c140b95942851808](http://doubleu.ch/short?APICreate=http://www.google.ch&authKey=bdc95b7532e651f3c140b95942851808)
+Check the Version of the API via [http://doubleu.ch/APIVersion](http://doubleu.ch/APIVersion)
 
 The Result is a JSON Object {name, shortenedLink} containing the shortened URL.
 
