@@ -1,18 +1,7 @@
 <?php
 error_reporting(E_ALL);
 require_once(dirname(__FILE__) . '/core.php');
-
-//configure -> see core.php Config Class for explanation
-Config::$storageDir = 's/';
-Config::$deletionEnabled = true;
-Config::$passwordProtected = false;
-Config::$passwordMD5Encrypted = 'bdc95b7532e651f3c140b95942851808';
-Config::$loadStatsAsynchronous = false;
-Config::$sortAlphabetically = false;
-Config::$limitDisplayedShorten = 0;
-Config::$allowAPICalls = true;
-Config::$publicCookies = false;
-Config::$choosableShorten = false;
+require_once(dirname(__FILE__). '/config.php');
 
 //open shortened link
 if($name = Helper::Get('redirect',$_GET))
@@ -25,10 +14,7 @@ if($name = Helper::Get('redirect',$_GET))
 //If passwordprotected use authKey=MD5ENCRYPTEDPASSWORD
 if(($url = Helper::Get('APICreate',$_POST)) && Config::$allowAPICalls)
 {
-    header("Access-Control-Allow-Orgin: *");
-    header("Access-Control-Allow-Methods: *");
     header("Content-Type: application/json");
-    header("HTTP/1.1 200 OK");
     try
     {
         if(!Config::$passwordProtected || Helper::get('authKey',$_POST) == Config::$passwordMD5Encrypted)
@@ -47,18 +33,15 @@ if(($url = Helper::Get('APICreate',$_POST)) && Config::$allowAPICalls)
 //API Service Alive Request
 if(Helper::Get('APIVersion',$_GET))
 {
-    header("Access-Control-Allow-Orgin: *");
-    header("Access-Control-Allow-Methods: *");
     header("Content-Type: application/json");
-    header("HTTP/1.1 200 OK");
-    die(json_encode(array("V" => 1.0)));
+    die(json_encode(array("V" => 1.1)));
 }
-
 
 //asynchronous request for statistics
 if($name = Helper::Get('getLog',$_POST))
 {
     $shorten = new Shorten($name);
+    header("Content-Type: application/json");
     die($shorten->getStatisticsJSON());
 }
 
@@ -296,7 +279,7 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
                     data: {getLog: $shorten},
                     success: function(response)
                     {
-                        $json_response = $.parseJSON(response);
+                        $json_response = response;
                         $this.html($json_response.numberOfHits);
                         $('#stats'+$shorten).find('p').html($json_response.entries);
                         $this.animate({backgroundColor:'red'},500).animate({backgroundColor:'#428bca'},500);
