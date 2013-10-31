@@ -21,13 +21,17 @@ if($name = Helper::Get('redirect',$_GET))
 }
 
 //API CreateCall (return JSON Encoded Shorten Object)
-//Call via /short?APICreate=THEURL
-//If passwordprotected also add &authKey=MD5ENCRYPTEDPASSWORD
-if(($url = Helper::Get('APICreate',$_GET)) && Config::$allowAPICalls)
+//Call via /short with variables APICreate=THEURL
+//If passwordprotected use authKey=MD5ENCRYPTEDPASSWORD
+if(($url = Helper::Get('APICreate',$_POST)) && Config::$allowAPICalls)
 {
+    header("Access-Control-Allow-Orgin: *");
+    header("Access-Control-Allow-Methods: *");
+    header("Content-Type: application/json");
+    header("HTTP/1.1 200 OK");
     try
     {
-        if(!Config::$passwordProtected || Helper::get('authKey',$_GET) == Config::$passwordMD5Encrypted)
+        if(!Config::$passwordProtected || Helper::get('authKey',$_POST) == Config::$passwordMD5Encrypted)
         {
             Helper::ValidateURL($url);
             $shorten = Shorten::Create(Shorten::GetRandomShortenName(), $url);
@@ -43,6 +47,10 @@ if(($url = Helper::Get('APICreate',$_GET)) && Config::$allowAPICalls)
 //API Service Alive Request
 if(Helper::Get('APIVersion',$_GET))
 {
+    header("Access-Control-Allow-Orgin: *");
+    header("Access-Control-Allow-Methods: *");
+    header("Content-Type: application/json");
+    header("HTTP/1.1 200 OK");
     die(json_encode(array("V" => 1.0)));
 }
 
