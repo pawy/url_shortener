@@ -100,10 +100,6 @@ class Config
      */
     public static $limitDisplayedShorten;
     /**
-     * @var Allow API-Calls to create shortened URLs by HTTP-GET-Request, this service will also be password protected if the site is
-     */
-    public static $allowAPICalls;
-    /**
      * @var If you want to make the site public, show each visitor only the shortener URLs that he/she created by saving them to a cookie
      */
     public static $publicCookies;
@@ -255,7 +251,7 @@ class Shorten
     /* Class members */
     public $name;
     public $shortenedLink;
-    public $filename;
+    private $filename;
     private $logFilename;
     private $url;
     private $statistic;
@@ -310,7 +306,7 @@ class Shorten
         return date('d.M.y H:i',filemtime($this->filename));
     }
 
-    protected function redirectToUrl()
+    public function redirectToUrl()
     {
         if(!file_exists($this->filename))
             throw new ShortenNotExistsException($this->name);

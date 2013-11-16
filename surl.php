@@ -1,49 +1,6 @@
 <?php
-error_reporting(E_ALL);
 require_once(dirname(__FILE__) . '/core.php');
 require_once(dirname(__FILE__) . '/config.php');
-
-//open shortened link
-if($name = Helper::Get('redirect',$_GET))
-{
-    Shorten::Redirect($name);
-}
-
-//API CreateCall (return JSON Encoded Shorten Object)
-//Call via /short with variables APICreate=THEURL
-//If passwordprotected use authKey=MD5ENCRYPTEDPASSWORD
-if(($url = Helper::Get('APICreate',$_POST)) && Config::$allowAPICalls)
-{
-    header("Content-Type: application/json");
-    try
-    {
-        if(!Config::$passwordProtected || Helper::get('authKey',$_POST) == Config::$passwordMD5Encrypted)
-        {
-            Helper::ValidateURL($url);
-            $shorten = Shorten::Create(Shorten::GetRandomShortenName(), $url);
-            die(json_encode($shorten));
-        }
-    }
-    catch(Exception $e)
-    {
-        die($e->getMessage());
-    }
-}
-
-//API Service Alive Request
-if(Helper::Get('APIVersion',$_GET))
-{
-    header("Content-Type: application/json");
-    die(json_encode(array("V" => 1.1)));
-}
-
-//asynchronous request for statistics
-if($name = Helper::Get('getLog',$_POST))
-{
-    $shorten = new Shorten($name);
-    header("Content-Type: application/json");
-    die($shorten->getStatisticsJSON());
-}
 
 //Password protection
 if(Config::$passwordProtected)
@@ -67,7 +24,7 @@ if($url = Helper::Get('url',$_POST))
     {
         $name = Helper::Get('shorten',$_POST,Shorten::GetRandomShortenName());
         $shorten = Shorten::Create($name, $url);
-        Helper::Redirect("/short#{$shorten->name}");
+        Helper::Redirect("/surl#{$shorten->name}");
     }
     catch(Exception $e)
     {
@@ -82,7 +39,7 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
     {
         $shorten = new Shorten($name);
         $shorten->delete();
-        Helper::Redirect('/short');
+        Helper::Redirect('/surl');
     }
     catch(Exception $e)
     {
@@ -213,7 +170,7 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
                     <span class="glyphicon glyphicon-tag"></span>
                 </a>
                 <?php if(Config::$deletionEnabled): ?>
-                    <a href="shorten.php?delete=<?= $shorten->name ?>" title="Delete the shortened URL" onclick="return confirm('Are you sure?')">
+                    <a href="surl.php?delete=<?= $shorten->name ?>" title="Delete the shortened URL" onclick="return confirm('Are you sure?')">
                         <span class="glyphicon glyphicon-remove-circle"></span>
                     </a>
                 <?php endif; ?>
@@ -274,9 +231,8 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
             {
                 $this = $(this);
                 $.ajax({
-                    type: 'POST',
-                    url: 'shorten.php',
-                    data: {getLog: $shorten},
+                    type: 'GET',
+                    url: '/surlapi/surl/' + $shorten + '/log',
                     success: function(response)
                     {
                         $json_response = response;
