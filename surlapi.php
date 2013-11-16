@@ -25,6 +25,20 @@ class version implements iApiController
 }
 
 /**
+ * Class Md5Controller
+ * Return the current Version of the API
+ */
+class md5 implements iApiController
+{
+    // surlapi/md5/[VALUE] GET
+    public function handleRequest(array $request)
+    {
+        header("Content-Type: application/json");
+        die(json_encode(array("md5" => md5($request[1]))));
+    }
+}
+
+/**
  * Class LogController
  * Returns the content of the Logfile
  */
@@ -77,7 +91,11 @@ class surl implements iApiController
             if(Config::$passwordProtected && Helper::get('auth',$_POST) != Config::$passwordMD5Encrypted)
                 throw new UnauthorizedException();
             Helper::ValidateURL($url);
-            $shorten = Shorten::Create(Shorten::GetRandomShortenName(), $url);
+            if(!Config::$choosableShorten && Helper::Get('surl',$_POST))
+                throw new ForbiddenException('Choosable shorten is deactivated on this server');
+            $name = Config::$choosableShorten ? Helper::Get('surl',$_POST,Shorten::GetRandomShortenName()) : Shorten::GetRandomShortenName();
+            $shorten = Shorten::Create($name, $url);
+            header('HTTP/1.0 201 Created');
             header("Content-Type: application/json");
             die(json_encode($shorten));
         }
@@ -118,11 +136,14 @@ catch(Exception $e)
 }
 
 //  -- Exceptions --
+/**
+ * Class APIException
+ * Make sure every APIException adds a corresponding HTTP Header Status Code
+ */
 class APIException extends Exception
 {
     public function __construct($message = null)
     {
-        header('HTTP/1.0 400 Bad Request');
         parent::__construct($message);
     }
 }
@@ -134,6 +155,7 @@ class BadRequestException extends APIException
 {
     public function __construct($message = null)
     {
+        header('HTTP/1.0 400 Bad Request');
         parent::__construct($message);
     }
 }
@@ -146,6 +168,18 @@ class UnauthorizedException extends APIException
     public function __construct($message = null)
     {
         header('HTTP/1.0 401 Unauthorized');
+        parent::__construct($message);
+    }
+}
+
+/**
+ * Class BadRequestException
+ */
+class ForbiddenException extends APIException
+{
+    public function __construct($message = null)
+    {
+        header('HTTP/1.0 403 Forbidden');
         parent::__construct($message);
     }
 }

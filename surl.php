@@ -25,7 +25,7 @@ if($url = Helper::Get('url',$_POST))
     {
         $name = Helper::Get('shorten',$_POST,Shorten::GetRandomShortenName());
         $shorten = Shorten::Create($name, $url);
-        Helper::Redirect("/surl#{$shorten->name}");
+        Helper::Redirect("/surl#{$shorten->surl}");
     }
     catch(Exception $e)
     {
@@ -117,7 +117,7 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
             <?php
             foreach(Shorten::GetAllShorteners() as $shorten):
                 ?>
-                <li><a href="#<?= $shorten->name ?>"><?= $shorten->name ?></a></li>
+                <li><a href="#<?= $shorten->surl ?>"><?= $shorten->surl ?></a></li>
             <?php
             endforeach;
             ?>
@@ -152,18 +152,18 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
     <?php
     foreach(Shorten::GetAllShorteners() as $shorten):
         ?>
-        <section id="<?= $shorten->name ?>">
+        <section id="<?= $shorten->surl ?>">
             <h2>
-                <a href="<?= $shorten->shortenedLink ?>" title="Open shortened URL" target="_blank">
-                    <?= $shorten->name ?>
+                <a href="<?= $shorten->link ?>" title="Open shortened URL" target="_blank">
+                    <?= $shorten->surl ?>
                 </a>
             </h2>
             <p>
-                <input type="text" class="form-control input-sm shorten" value="<?= $shorten->shortenedLink ?>" />
+                <input type="text" class="form-control input-sm shorten" value="<?= $shorten->link ?>" />
             </p>
             <p>
-                <a title="Show statistics" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#stats<?= $shorten->name ?>">
-                    <span class="badge badge-s" shorten="<?= $shorten->name ?>">
+                <a title="Show statistics" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#stats<?= $shorten->surl ?>">
+                    <span class="badge badge-s" shorten="<?= $shorten->surl ?>">
                         <?= Config::$loadStatsAsynchronous ? '?' : $shorten->getStatistics()->numberOfHits ?>
                     </span>
                 </a>
@@ -173,12 +173,12 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
                     <span class="glyphicon glyphicon-tag"></span>
                 </a>
                 <?php if(Config::$deletionEnabled): ?>
-                    <a href="surl.php?delete=<?= $shorten->name ?>" title="Delete the shortened URL" onclick="return confirm('Are you sure?')">
+                    <a href="surl.php?delete=<?= $shorten->surl ?>" title="Delete the shortened URL" onclick="return confirm('Are you sure?')">
                         <span class="glyphicon glyphicon-remove-circle"></span>
                     </a>
                 <?php endif; ?>
             </p>
-            <div id="stats<?= $shorten->name ?>" class="collapse well well-sm statistics">
+            <div id="stats<?= $shorten->surl ?>" class="collapse well well-sm statistics">
                 <p>
                     <?= Config::$loadStatsAsynchronous ? '' : $shorten->getStatistics()->entries ?>
                 </p>

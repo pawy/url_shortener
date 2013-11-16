@@ -245,12 +245,12 @@ class Shorten
         while(file_exists($shorten->filename)){
             $shorten = new Shorten(Helper::RandString(5));
         }
-        return $shorten->name;
+        return $shorten->surl;
     }
 
     /* Class members */
-    public $name;
-    public $shortenedLink;
+    public $surl;
+    public $link;
     private $filename;
     private $logFilename;
     private $url;
@@ -259,8 +259,8 @@ class Shorten
     public function __construct($name)
     {
         Shorten::ValidateShorten($name);
-        $this->name = $name;
-        $this->shortenedLink = 'http://' . SERVER . '/' . $name;
+        $this->surl = $name;
+        $this->link = 'http://' . SERVER . '/' . $name;
         $this->filename = Config::$storageDir . $name;
         $this->logFilename = $this->filename . '.log';
     }
@@ -274,7 +274,7 @@ class Shorten
 
         if(Config::$publicCookies)
         {
-            CookieHandler::RemoveShortener($this->name);
+            CookieHandler::RemoveShortener($this->surl);
         }
     }
 
@@ -309,7 +309,7 @@ class Shorten
     public function redirectToUrl()
     {
         if(!file_exists($this->filename))
-            throw new ShortenNotExistsException($this->name);
+            throw new ShortenNotExistsException($this->surl);
         $this->track();
         Helper::Redirect($this->getUrl());
     }
@@ -355,14 +355,14 @@ class Shorten
         Helper::ValidateURL($url);
 
         if(file_exists($this->filename))
-            throw new ShortenAlreadyExistsException($this->name);
+            throw new ShortenAlreadyExistsException($this->surl);
 
         file_put_contents($this->filename,$url);
         file_put_contents($this->logFilename,'');
 
         if(Config::$publicCookies)
         {
-            CookieHandler::AddShortener($this->name);
+            CookieHandler::AddShortener($this->surl);
         }
 
         return $this;
