@@ -17,6 +17,7 @@ if(Config::$passwordProtected)
     }
 }
 
+//TODO: Replace with API Calls
 //create shortened Link
 if($url = Helper::Get('url',$_POST))
 {
@@ -32,6 +33,7 @@ if($url = Helper::Get('url',$_POST))
     }
 }
 
+//TODO: Replace with API Calls
 //delete shortened Link (depending on Config::$deletionEnabled)
 if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
 {
@@ -46,6 +48,7 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
         $message = $e->getMessage();
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html>

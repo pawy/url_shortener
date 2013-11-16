@@ -331,7 +331,7 @@ class Shorten
             '"' . $referer . '";';
 
         //Location tracking; See http://ipinfo.io
-        //This is very slow, deactivate it!
+        //Disabled due to performance issues
         /*
         try{
             $geoLocation = json_decode(Helper::UrlGetContents("http://ipinfo.io/{$ip}/json"));
