@@ -140,7 +140,7 @@ catch(Exception $e)
  * Class APIException
  * Make sure every APIException adds a corresponding HTTP Header Status Code
  */
-class APIException extends Exception
+abstract class APIException extends Exception
 {
     public function __construct($message = null)
     {
