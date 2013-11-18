@@ -39,6 +39,7 @@ API
 --------
 
 It's a RESTful API according to the specifications.
+
 URL: http://yourdomain/surlapi
 
 - /version GET -> returns the version
