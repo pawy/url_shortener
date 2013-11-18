@@ -1,11 +1,1 @@
-{
-    "storageDir":"s\/",
-    "deletionEnabled":true,
-    "passwordProtected":false,
-    "passwordMD5Encrypted":"",
-    "loadStatsAsynchronous":true,
-    "sortAlphabetically":false,
-    "limitDisplayedShorten":0,
-    "publicCookies":false,
-    "choosableShorten":true
-}
+{"storageDir":"s\/","deletionEnabled":"on","passwordProtected":false,"passwordMD5Encrypted":"d90fe1178a183ec92bdb7a2ab2df06f0","loadStatsAsynchronous":true,"sortAlphabetically":false,"limitDisplayedShorten":0,"publicCookies":false,"choosableShorten":true}

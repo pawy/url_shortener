@@ -1,6 +1,10 @@
 <?php
 require_once(dirname(__FILE__) . '/core.php');
 
+//Redirect to the configuration page if it exists, except if its an md5 api request (surlapi/md5) that is used in the config.php
+if(file_exists(dirname(__FILE__) . '/config.php'))
+    Helper::Redirect('config.php');
+
 //Load the configuration from the surl_config_json.php file
 Config::Load();
 
