@@ -1,8 +1,27 @@
 <?php
 require_once(dirname(__FILE__) . '/core.php');
 
-//Load the configuration from the surl.json file
+//Load the configuration from the surl_config_json.php file
 Config::Load();
+
+//Entry point for APIRequests, handle request
+try
+{
+    if($request = Helper::Get('apiRequest',$_GET))
+    {
+        //split the request by slash
+        $params = explode('/', $request);
+        //find a controller for the first parameter of the request
+        if(!class_exists($params[0]))
+            throw new BadRequestException();
+        $controller = new $params[0]();
+        $controller->handleRequest($params);
+    }
+}
+catch(Exception $e)
+{
+    die($e->getMessage());
+}
 
 //Password protection
 if(Config::$passwordProtected)

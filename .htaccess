@@ -7,7 +7,7 @@ RewriteEngine On
 AddDefaultCharset utf-8
 Options +FollowSymLinks
 
-RewriteRule ^surlapi/([a-zA-Z0-9_/]*)$ /surlapi.php?request=$1 [L,QSA]
+RewriteRule ^surlapi/([a-zA-Z0-9_/]*)$ /surl.php?apiRequest=$1 [L,QSA]
 RewriteRule ^surl$ /surl.php [L,QSA]
 # Uncomment the line below if you have nothing else on this domain and the shorten script is your default page
 RewriteRule ^$ /surl.php [L,QSA]
