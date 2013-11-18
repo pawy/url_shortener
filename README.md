@@ -3,7 +3,7 @@
 
 Lightweight, file based, url shortener in PHP with OOP and Bootstrap-UI. No Database needed!
 
-- Create customized shortened URLs like "yourdomain.com/link"
+- Create customized shortened URLs like "http://yourdomain.com/link"
   - It is more personalized than using any public url-shorteners
   - You can make the shortened url self speaking, unlike with the public url shorteners
 - Optional password protection
