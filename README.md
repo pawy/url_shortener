@@ -41,7 +41,6 @@ API
 It's a RESTful API according to the specifications.
 
 URL: http://yourdomain/surlapi
-
 - /version GET -> returns the version
 - /md5/[Value] GET -> returns the encrypted [Value]
 - /surl
