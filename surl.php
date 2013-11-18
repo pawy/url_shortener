@@ -1,6 +1,8 @@
 <?php
 require_once(dirname(__FILE__) . '/core.php');
-require_once(dirname(__FILE__) . '/config.php');
+
+//Load the configuration from the surl.json file
+Config::Load();
 
 //Password protection
 if(Config::$passwordProtected)

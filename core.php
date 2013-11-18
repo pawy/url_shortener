@@ -42,6 +42,27 @@ class Config
      * @var Show the textfield to freely choose the shortened url (otherwise its hidden and a random shortened url will alway be used)
      */
     public static $choosableShorten;
+
+    public static function Load()
+    {
+        $config = json_decode(file_get_contents('surl.json'));
+        $reflection = new ReflectionClass('Config');
+        foreach($reflection->getStaticProperties() as $name => $value)
+        {
+            $reflection->setStaticPropertyValue($name,$config->$name);
+        }
+    }
+
+    public static function Save()
+    {
+        $config = array();
+        $reflection = new ReflectionClass('Config');
+        foreach($reflection->getStaticProperties() as $name => $value)
+        {
+            $config[$name] = $value;
+        }
+        file_put_contents('surl.json',json_encode($config));
+    }
 }
 
 /**
