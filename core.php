@@ -2,71 +2,6 @@
 define('SERVER',$_SERVER['SERVER_NAME']);
 
 /**
- * Class Helper
- */
-class Helper
-{
-    public static function Get($index, $scope, $default = null)
-    {
-        if (is_object($scope))
-        {
-            return isset($scope->$index) ? $scope->$index : $default;
-        }
-        else if (is_array($scope))
-        {
-            return array_key_exists($index, $scope) && !is_null($scope[$index]) && !(empty($scope[$index]) && !is_numeric($scope[$index])) ? $scope[$index] : $default;
-        }
-        return $default;
-    }
-
-    /**
-     * Also check Shorten::ValidateShorten() to make sure to use the same characters, also check the .htaccess for the valid characters
-     * @param $length
-     * @param string $charset
-     * @return string
-     */
-    public static function RandString($length, $charset='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_')
-    {
-        $str = '';
-        $count = strlen($charset);
-        while ($length--) {
-            $str .= $charset[mt_rand(0, $count-1)];
-        }
-        return $str;
-    }
-
-    /**
-     * Function is using Curl, and if it is not installed, try file_get_contents directly
-     * This function is used for asynchronous requests
-     * @param $url
-     * @return mixed|string (the content of the url
-     */
-    public static function UrlGetContents ($url) {
-        if (!function_exists('curl_init')){
-            return file_get_contents($url);
-        }
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $output = curl_exec($ch);
-        curl_close($ch);
-        return $output;
-    }
-
-    public static function Redirect($url)
-    {
-        die(header('Location: ' . $url));
-    }
-
-    public static function ValidateURL($url)
-    {
-        //filter_var is on older PHP version (<5.3) not trustworthy
-        if(!filter_var($url, FILTER_VALIDATE_URL))
-            throw new InvalidURLException();
-    }
-}
-
-/**
  * Class Config
  */
 class Config
@@ -369,8 +304,6 @@ class Shorten
     }
 }
 
-// -- Exceptions --
-
 /**
  * Class Statistic
  */
@@ -385,6 +318,73 @@ class Statistic
         $this->numberOfHits = substr_count($this->entries,'<br>');
     }
 }
+
+/**
+ * Class Helper
+ */
+class Helper
+{
+    public static function Get($index, $scope, $default = null)
+    {
+        if (is_object($scope))
+        {
+            return isset($scope->$index) ? $scope->$index : $default;
+        }
+        else if (is_array($scope))
+        {
+            return array_key_exists($index, $scope) && !is_null($scope[$index]) && !(empty($scope[$index]) && !is_numeric($scope[$index])) ? $scope[$index] : $default;
+        }
+        return $default;
+    }
+
+    /**
+     * Also check Shorten::ValidateShorten() to make sure to use the same characters, also check the .htaccess for the valid characters
+     * @param $length
+     * @param string $charset
+     * @return string
+     */
+    public static function RandString($length, $charset='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_')
+    {
+        $str = '';
+        $count = strlen($charset);
+        while ($length--) {
+            $str .= $charset[mt_rand(0, $count-1)];
+        }
+        return $str;
+    }
+
+    /**
+     * Function is using Curl, and if it is not installed, try file_get_contents directly
+     * This function is used for asynchronous requests
+     * @param $url
+     * @return mixed|string (the content of the url
+     */
+    public static function UrlGetContents ($url) {
+        if (!function_exists('curl_init')){
+            return file_get_contents($url);
+        }
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        return $output;
+    }
+
+    public static function Redirect($url)
+    {
+        die(header('Location: ' . $url));
+    }
+
+    public static function ValidateURL($url)
+    {
+        //filter_var is on older PHP version (<5.3) not trustworthy
+        if(!filter_var($url, FILTER_VALIDATE_URL))
+            throw new InvalidURLException();
+    }
+}
+
+// -- Exceptions --
 
 /**
  * Class ShortenNotExistsException
