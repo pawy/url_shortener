@@ -11,10 +11,6 @@ Lightweight, file based, url shortener in PHP with OOP and Bootstrap-UI. No Data
 - easy integration in domains with existing websites
 - RESTful API
 
-Installation
-------------
-1. Copy the files into your root directory
-2. Congratulations, you're done!
 
 DEMO
 ----
@@ -29,11 +25,16 @@ http://pawy.net/chromext
 
 The source is available here: https://github.com/pawy/url_shortener_chrome_extension
 
+Installation
+------------
+1. Copy the files into your root directory
+2. Congratulations, you're done!
+
 Configuration
 -------------
 
-TODO: Configuration GUI
-Edit the config.php file and set the options there.
+There is a config.php file to which you get redirected after copying the files to your server.
+Adjust the configuration to your needs and then either delete the config.php file from your server or rename it using the wizard.
 
 API
 --------
