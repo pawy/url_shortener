@@ -15,13 +15,13 @@ Lightweight, file based, url shortener in PHP with OOP and Bootstrap-UI. No Data
 DEMO
 ----
 
-www.doubleu.ch
+http://surl.bz
 
 Chrome Extension
 ----------------
 
 There is a chrome extension available to directly shorten the current url with just one click.
-http://pawy.net/chromext
+http://surl.bz/chromext
 
 The source is available here: https://github.com/pawy/url_shortener_chrome_extension
 
