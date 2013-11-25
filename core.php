@@ -512,6 +512,7 @@ class surl implements iApiController
 
     // surlapi/surl/[NAME]/[optional:Attribute] GET
     // surlapi/surl/ POST
+    // surlapi/surl/ DELETE
     public function handleRequest(array $request)
     {
         try
@@ -524,16 +525,26 @@ class surl implements iApiController
                     $this->create();
                     break;
                 case 'GET':
+                    // surlapi/surl GET
+                    if(!$request[1])
+                        $this->all();
+
                     // surlapi/surl/[NAME]/[optional:Action] GET
                     //identify the shorten
                     $this->shorten = new Shorten($request[1]);
+
                     //call the action method of the shorten if none or not existing call redirect action
                     if($request[2] && method_exists($this,$request[2]))
                         $this->$request[2]();
                     else
-                        $this->redirect();
+                        $this->one();
+                    break;
+                case 'DELETE':
+                    // surlapi/surl DELETE
+                    $this->delete();
                     break;
             }
+            throw new BadRequestException("Nothing Requested");
         }
         catch(Exception $e)
         {
@@ -563,6 +574,33 @@ class surl implements iApiController
             header("Content-Type: application/json");
             die(json_encode($shorten));
         }
+    }
+
+    private function delete()
+    {
+        if(Config::$passwordProtected && Helper::get('auth',$_POST) != Config::$passwordMD5Encrypted)
+            throw new UnauthorizedException();
+
+        if(!Config::$deletionEnabled)
+            throw new ForbiddenException("Deletion is disabled on this server");
+
+        parse_str(file_get_contents("php://input"),$post_vars);
+        $this->shorten = new Shorten(Helper::Get('surl',$post_vars));
+        $this->shorten->delete();
+        header('HTTP/1.0 200 OK');
+        die();
+    }
+
+    private function all()
+    {
+        header("Content-Type: application/json");
+        die(json_encode(Shorten::GetAllShorteners()));
+    }
+
+    private function one()
+    {
+        header("Content-Type: application/json");
+        die(json_encode($this->shorten));
     }
 
     private function redirect()
@@ -606,7 +644,7 @@ class BadRequestException extends APIException
 }
 
 /**
- * Class BadRequestException
+ * Class UnauthorizedException
  */
 class UnauthorizedException extends APIException
 {
@@ -618,7 +656,7 @@ class UnauthorizedException extends APIException
 }
 
 /**
- * Class BadRequestException
+ * Class ForbiddenException
  */
 class ForbiddenException extends APIException
 {

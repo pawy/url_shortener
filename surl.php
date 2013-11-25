@@ -41,39 +41,6 @@ if(Config::$passwordProtected)
         Helper::Redirect('shortenerlogin.html');
     }
 }
-
-//TODO: Replace with API Calls
-//create shortened Link
-if($url = Helper::Get('url',$_POST))
-{
-    try
-    {
-        $name = Helper::Get('shorten',$_POST,Shorten::GetRandomShortenName());
-        $shorten = Shorten::Create($name, $url);
-        Helper::Redirect("/surl#{$shorten->surl}");
-    }
-    catch(Exception $e)
-    {
-        $message = $e->getMessage();
-    }
-}
-
-//TODO: Replace with API Calls
-//delete shortened Link (depending on Config::$deletionEnabled)
-if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
-{
-    try
-    {
-        $shorten = new Shorten($name);
-        $shorten->delete();
-        Helper::Redirect('/surl');
-    }
-    catch(Exception $e)
-    {
-        $message = $e->getMessage();
-    }
-}
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -163,7 +130,7 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
     <?php if(Config::$choosableShorten): ?>
         <div class="form-group">
             <label for="shorten">Shortened URL <small>http://<?= SERVER ?>/</small></label>
-            <input class="form-control form-control-short" onclick="select()" type="text" name="shorten" id="shorten" value="<?= Shorten::GetRandomShortenName() ?>" placeholder="Shortener URL..." required />
+            <input class="form-control form-control-short" onclick="select()" type="text" name="shorten" id="shorten" value="<?= Shorten::GetRandomShortenName() ?>" placeholder="Shortener URL..." />
         </div>
     <?php endif; ?>
         <div class="form-group">
@@ -174,44 +141,46 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
         <small class="pull-right text-muted">Get your own shortener service <a href="https://github.com/pawy/url_shortener">@github</a></small>
     </form>
     <input id="search" type="search" class="form-control" placeholder="Search..." onclick="select()" />
-    <?php
-    foreach(Shorten::GetAllShorteners() as $shorten):
-        ?>
-        <section id="<?= $shorten->surl ?>">
-            <h2>
-                <a href="<?= $shorten->link ?>" title="Open shortened URL" target="_blank">
-                    <?= $shorten->surl ?>
-                </a>
-            </h2>
-            <p>
-                <input type="text" class="form-control input-sm shorten" value="<?= $shorten->link ?>" />
-            </p>
-            <p>
-                <a title="Show statistics" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#stats<?= $shorten->surl ?>">
-                    <span class="badge badge-s" shorten="<?= $shorten->surl ?>">
-                        <?= Config::$loadStatsAsynchronous ? '?' : $shorten->getStatistics()->numberOfHits ?>
-                    </span>
-                </a>
-                <small class="text-muted"><?= $shorten->getCreationDate() ?></small>
-                <?= $shorten->getUrl() ?>
-                <a class="margin-left-10" href="<?= $shorten->getUrl() ?>" target="_blank" title="Open the URL">
-                    <span class="glyphicon glyphicon-tag"></span>
-                </a>
-                <?php if(Config::$deletionEnabled): ?>
-                    <a href="surl.php?delete=<?= $shorten->surl ?>" title="Delete the shortened URL" onclick="return confirm('Are you sure?')">
-                        <span class="glyphicon glyphicon-remove-circle"></span>
+    <div class="shortens">
+        <?php
+        foreach(Shorten::GetAllShorteners() as $shorten):
+            ?>
+            <section id="<?= $shorten->surl ?>">
+                <h2>
+                    <a href="<?= $shorten->link ?>" title="Open shortened URL" target="_blank">
+                        <?= $shorten->surl ?>
                     </a>
-                <?php endif; ?>
-            </p>
-            <div id="stats<?= $shorten->surl ?>" class="collapse well well-sm statistics">
+                </h2>
                 <p>
-                    <?= Config::$loadStatsAsynchronous ? '' : $shorten->getStatistics()->entries ?>
+                    <input type="text" class="form-control input-sm shorten" value="<?= $shorten->link ?>" />
                 </p>
-            </div>
-        </section>
-    <?php
-    endforeach;
-    ?>
+                <p>
+                    <a title="Show statistics" class="btn btn-default accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#stats<?= $shorten->surl ?>">
+                        <span class="badge badge-s" shorten="<?= $shorten->surl ?>">
+                            <?= Config::$loadStatsAsynchronous ? '?' : $shorten->getStatistics()->numberOfHits ?>
+                        </span>
+                    </a>
+                    <small class="text-muted"><?= $shorten->getCreationDate() ?></small>
+                    <?= $shorten->getUrl() ?>
+                    <a class="btn btn-default margin-left-10" href="<?= $shorten->getUrl() ?>" target="_blank" title="Open the URL">
+                        <span class="glyphicon glyphicon-tag"></span>
+                    </a>
+                    <?php if(Config::$deletionEnabled): ?>
+                        <button class="btn btn-default delete" shorten="<?= $shorten->surl ?>" title="Delete" onclick="return confirm('Are you sure?')">
+                            <span class="glyphicon glyphicon-remove-circle"></span>
+                        </button>
+                    <?php endif; ?>
+                </p>
+                <div id="stats<?= $shorten->surl ?>" class="collapse well well-sm statistics">
+                    <p>
+                        <?= Config::$loadStatsAsynchronous ? '' : $shorten->getStatistics()->entries ?>
+                    </p>
+                </div>
+            </section>
+        <?php
+        endforeach;
+        ?>
+    </div>
 </div>
 <div id="bottom-filler"></div>
 <!-- jQuery -->
@@ -248,11 +217,53 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
             }, 500 );
         });
 
+        $('form').submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '/surlapi/surl/',
+                data: {
+                    url : $('#url').val(),
+                    surl : $('#shorten').val(),
+                    auth : '<?= Helper::Get('pw',$_SESSION,'') ?>'
+                },
+                success: function(response)
+                {
+                    $.get(location.href, function(data) {
+                        $('#url, #shorten').val('');
+                        $res = $(data).find('#'+response.surl)
+                        $('div.shortens').prepend($res);
+                        window.location.hash = response.surl;
+                        setZclipInitially($res.find('input.shorten'));
+                        setTimeout(function(){
+                            setZclip();
+                        }, 200 );
+                    });
+                }
+            })
+        });
+
+        $('div.shortens').on('click','button.delete',function(){
+            $shorten = $(this).attr('shorten');
+            $.ajax({
+                type: 'DELETE',
+                url: '/surlapi/surl/',
+                data: { surl : $shorten },
+                success: function(response)
+                {
+                    $('#' + $shorten).remove();
+                    setTimeout(function(){
+                        setZclip();
+                    }, 200 );
+                }
+            })
+        });
+
         <?php
             if(Config::$loadStatsAsynchronous) :
         ?>
         //Load Statistics with asynchronous request
-        $('.badge').click( function(){
+        $('div.shortens').on('click','.badge',function(){
             $shorten = $(this).attr('shorten');
             //only query when showing, not when hiding
             if($('#stats'+$shorten).hasClass('collapse'))
@@ -267,9 +278,6 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
                         $this.html($json_response.numberOfHits);
                         $('#stats'+$shorten).find('p').html($json_response.entries);
                         $this.animate({backgroundColor:'red'},500).animate({backgroundColor:'#428bca'},500);
-                        setTimeout(function(){
-                            setZclip();
-                        }, 500 );
                     }
                 })
             }
@@ -293,8 +301,16 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
             }, 200 );
         });
 
+        setZclipInitially($('input.shorten'));
+
+        $(window).resize(function(){resizeBottom();});
+        resizeBottom();
+    });
+
+    function setZclipInitially(object)
+    {
         // Copy to Clipboard using Jquery ZClip plugin; see http://www.steamdev.com/zclip/
-        $('input.shorten').zclip({
+        object.zclip({
             setHandCursor: false,
             path:'<?= Config::$storageDir ?>ZeroClipboard.swf',
             copy:function(){return $(this).val();},
@@ -308,10 +324,7 @@ if(Config::$deletionEnabled && $name = Helper::Get('delete',$_GET))
                 $(this).animate({backgroundColor:'red'},500).animate({backgroundColor:'white'},500);
             }
         });
-
-        $(window).resize(function(){resizeBottom();});
-        resizeBottom();
-    });
+    }
 
     // Reposition the zClip's Flash overlay to catch the click
     function setZclip()

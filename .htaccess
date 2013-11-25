@@ -16,4 +16,4 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-F
 
-RewriteRule ^([a-zA-Z0-9_^.]+)?$ /surlapi/surl/$1 [L,QSA]
+RewriteRule ^([a-zA-Z0-9_^.]+)?$ /surlapi/surl/$1/redirect [L,QSA]
