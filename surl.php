@@ -231,8 +231,14 @@ if(Config::$passwordProtected)
                 {
                     $.get(location.href, function(data) {
                         $('#url, #shorten').val('');
-                        $res = $(data).find('#'+response.surl)
-                        $('div.shortens').prepend($res);
+                        $section = $(data).find('#'+response.surl)
+                        $('div.shortens').prepend($section);
+                        $nav = $(data).find('a[href="#' + response.surl + '"]');
+                        $('.nav').prepend($nav);
+                        $('a[href="#' + response.surl + '"]').wrap('<li>');
+                        $('[data-spy="scroll"]').each(function () {
+                            var $spy = $(this).scrollspy('refresh')
+                        });
                         window.location.hash = response.surl;
                         setZclipInitially($res.find('input.shorten'));
                         setTimeout(function(){
@@ -255,6 +261,10 @@ if(Config::$passwordProtected)
                 success: function(response)
                 {
                     $('#' + $shorten).remove();
+                    $('a[href="#' + $shorten + '"]').parent().remove();
+                    $('[data-spy="scroll"]').each(function () {
+                        var $spy = $(this).scrollspy('refresh')
+                    });
                     setTimeout(function(){
                         setZclip();
                     }, 200 );
