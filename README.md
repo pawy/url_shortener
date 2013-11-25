@@ -45,12 +45,15 @@ URL: http://yourdomain/surlapi
 - /version GET -> returns the version
 - /md5/[Value] GET -> returns the encrypted [Value]
 - /surl
-  - /[ShortenedURL] GET -> redirects to the url
+  - /[ShortenedURL]/redirec GET -> redirects to the url
   - /[ShortenedURL]/log GET -> click log
 - /surl POST -> Create
   - url: The url
   - auth (optional): If the server requires authentication its the encrypted (md5) password
   - surl (optional): If the server allows choosable shorten
+- /surl DELETE -> Delete
+  - surl: The shortened Url
+  - auth (optional): If the server requires authentication its the encrypted (md5) password
 
 
 Feel free to change the script to your needs and notify me if you have some improvements!
