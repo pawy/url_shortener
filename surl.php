@@ -248,7 +248,10 @@ if(Config::$passwordProtected)
             $.ajax({
                 type: 'DELETE',
                 url: '/surlapi/surl/',
-                data: { surl : $shorten },
+                data: {
+                    surl : $shorten,
+                    auth : '<?= Helper::Get('pw',$_SESSION,'') ?>'
+                },
                 success: function(response)
                 {
                     $('#' + $shorten).remove();
