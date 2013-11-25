@@ -580,12 +580,11 @@ class surl implements iApiController
     {
         parse_str(file_get_contents("php://input"),$post_vars);
 
-        if(Config::$passwordProtected && Helper::get('auth',$post_vars) != Config::$passwordMD5Encrypted)
+        if(Config::$passwordProtected && Helper::Get('auth',$post_vars) != Config::$passwordMD5Encrypted)
             throw new UnauthorizedException();
 
         if(!Config::$deletionEnabled)
             throw new ForbiddenException("Deletion is disabled on this server");
-
 
         $this->shorten = new Shorten(Helper::Get('surl',$post_vars));
         $this->shorten->delete();
