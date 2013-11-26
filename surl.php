@@ -166,7 +166,7 @@ if(Config::$passwordProtected)
                         <span class="glyphicon glyphicon-tag"></span>
                     </a>
                     <?php if(Config::$deletionEnabled): ?>
-                        <button class="btn btn-default delete" shorten="<?= $shorten->surl ?>" title="Delete" onclick="return confirm('Are you sure?')">
+                        <button class="btn btn-default delete" shorten="<?= $shorten->surl ?>" title="Delete">
                             <span class="glyphicon glyphicon-remove-circle"></span>
                         </button>
                     <?php endif; ?>
@@ -250,6 +250,9 @@ if(Config::$passwordProtected)
         });
 
         $('div.shortens').on('click','button.delete',function(){
+            if(!confirm('Are you sure?'))
+                return;
+
             $shorten = $(this).attr('shorten');
             $.ajax({
                 type: 'DELETE',

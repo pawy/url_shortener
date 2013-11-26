@@ -403,6 +403,10 @@ class Helper
         if(!filter_var($url, FILTER_VALIDATE_URL))
             throw new InvalidURLException();
     }
+
+    public static function IsJson($string) {
+        return ((is_string($string) && (is_object(json_decode($string)) || is_array(json_decode($string))))) ? true : false;
+    }
 }
 
 // -- Exceptions --
@@ -509,6 +513,7 @@ class md5 implements iApiController
 class surl implements iApiController
 {
     private $shorten;
+    private $post_vars;
 
     // surlapi/surl/[NAME]/[optional:Attribute] GET
     // surlapi/surl/ POST
@@ -517,11 +522,17 @@ class surl implements iApiController
     {
         try
         {
+            //CORS
+            header('Access-Control-Allow-Origin: *');
+            header("Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS");
+            header("Access-Control-Allow-Headers: origin, content-type, accept");
+
             //decide whether its an action or its a specific shorten
             switch($_SERVER['REQUEST_METHOD'])
             {
-                // surlapi/surl POST -> Create new
                 case 'POST':
+                    // surlapi/surl POST -> Create new
+                    $this->readRequestBody();
                     $this->create();
                     break;
                 case 'GET':
@@ -540,8 +551,13 @@ class surl implements iApiController
                         $this->one();
                     break;
                 case 'DELETE':
+                    $this->readRequestBody();
                     // surlapi/surl DELETE
                     $this->delete();
+                    break;
+                case 'OPTIONS':
+                    header('HTTP/1.0 200 OK');
+                    die();
                     break;
             }
             throw new BadRequestException("Nothing Requested");
@@ -556,19 +572,33 @@ class surl implements iApiController
         }
     }
 
+    private function readRequestBody()
+    {
+        $request_body = file_get_contents("php://input");
+        if(Helper::IsJson($request_body))
+            $this->post_vars = json_decode($request_body);
+        else
+            parse_str($request_body, $this->post_vars);
+    }
+
+    private function getFromRequest($var)
+    {
+        return Helper::Get($var,$_POST,Helper::Get($var,$this->post_vars));
+    }
+
     /**
      * Create a new shorten
      */
     private function create()
     {
-        if(($url = Helper::Get('url',$_POST)))
+        if($url = $this->getFromRequest('url'))
         {
-            if(Config::$passwordProtected && Helper::get('auth',$_POST) != Config::$passwordMD5Encrypted)
+            if(Config::$passwordProtected && $this->getFromRequest('auth') != Config::$passwordMD5Encrypted)
                 throw new UnauthorizedException();
             Helper::ValidateURL($url);
-            if(!Config::$choosableShorten && Helper::Get('surl',$_POST))
+            if(!Config::$choosableShorten && $this->getFromRequest('surl'))
                 throw new ForbiddenException('Choosable shorten is deactivated on this server');
-            $name = Config::$choosableShorten ? Helper::Get('surl',$_POST,Shorten::GetRandomShortenName()) : Shorten::GetRandomShortenName();
+            $name = Config::$choosableShorten ? Helper::Get('surl',$_POST,Helper::Get('surl',$post_vars,Shorten::GetRandomShortenName())) : Shorten::GetRandomShortenName();
             $shorten = Shorten::Create($name, $url);
             header('HTTP/1.0 201 Created');
             header("Content-Type: application/json");
@@ -578,17 +608,15 @@ class surl implements iApiController
 
     private function delete()
     {
-        parse_str(file_get_contents("php://input"),$post_vars);
-
-        if(Config::$passwordProtected && Helper::Get('auth',$post_vars) != Config::$passwordMD5Encrypted)
+        if(Config::$passwordProtected && $this->getFromRequest('auth') != Config::$passwordMD5Encrypted)
             throw new UnauthorizedException();
 
         if(!Config::$deletionEnabled)
             throw new ForbiddenException("Deletion is disabled on this server");
 
-        $this->shorten = new Shorten(Helper::Get('surl',$post_vars));
+        $this->shorten = new Shorten($this->getFromRequest('surl'));
         $this->shorten->delete();
-        header('HTTP/1.0 200 OK');
+        header('HTTP/1.0 204 No Content');
         die();
     }
 
