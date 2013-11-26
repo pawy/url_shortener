@@ -209,8 +209,8 @@ class Shorten
     public $link;
     private $filename;
     private $logFilename;
-    private $url;
     private $statistic;
+    private $url;
 
     public function __construct($name)
     {
@@ -553,7 +553,7 @@ class surl implements iApiController
                 case 'DELETE':
                     $this->readRequestBody();
                     // surlapi/surl DELETE
-                    $this->delete();
+                    $this->delete($request[1]);
                     break;
                 case 'OPTIONS':
                     header('HTTP/1.0 200 OK');
@@ -606,15 +606,18 @@ class surl implements iApiController
         }
     }
 
-    private function delete()
+    private function delete($surl)
     {
+        if(!$surl)
+            $surl = $this->getFromRequest('surl');
+
         if(Config::$passwordProtected && $this->getFromRequest('auth') != Config::$passwordMD5Encrypted)
             throw new UnauthorizedException();
 
         if(!Config::$deletionEnabled)
             throw new ForbiddenException("Deletion is disabled on this server");
 
-        $this->shorten = new Shorten($this->getFromRequest('surl'));
+        $this->shorten = new Shorten($surl);
         $this->shorten->delete();
         header('HTTP/1.0 204 No Content');
         die();
