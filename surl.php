@@ -240,7 +240,7 @@ if(Config::$passwordProtected)
                             var $spy = $(this).scrollspy('refresh')
                         });
                         window.location.hash = response.surl;
-                        setZclipInitially($res.find('input.shorten'));
+                        setZclipInitially($section.find('input.shorten'));
                         setTimeout(function(){
                             setZclip();
                         }, 200 );
