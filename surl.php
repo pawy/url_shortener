@@ -294,6 +294,9 @@ if(Config::$passwordProtected)
                         $this.html($json_response.numberOfHits);
                         $('#stats'+$shorten).find('p').html($json_response.entries);
                         $this.animate({backgroundColor:'red'},500).animate({backgroundColor:'#428bca'},500);
+                        setTimeout(function(){
+                            setZclip();
+                        }, 200 );
                     }
                 })
             }
@@ -312,6 +315,7 @@ if(Config::$passwordProtected)
         ?>
         // Catch hide toggle events from Bootstrap to reposition the zclip flash
         $('.statistics').on('hidden.bs.collapse', function () {
+            alert('nigga');
             setTimeout(function(){
                 setZclip();
             }, 200 );
