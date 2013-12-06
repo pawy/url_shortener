@@ -315,7 +315,6 @@ if(Config::$passwordProtected)
         ?>
         // Catch hide toggle events from Bootstrap to reposition the zclip flash
         $('.statistics').on('hidden.bs.collapse', function () {
-            alert('nigga');
             setTimeout(function(){
                 setZclip();
             }, 200 );
