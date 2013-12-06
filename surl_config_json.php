@@ -1,1 +1,1 @@
-{"storageDir":"s\/","deletionEnabled":"on","passwordProtected":null,"passwordMD5Encrypted":null,"loadStatsAsynchronous":"on","sortAlphabetically":null,"limitDisplayedShorten":"0","publicCookies":null,"choosableShorten":"on"}
+{"storageDir":"s\/","deletionEnabled":"on","passwordProtected":null,"passwordMD5Encrypted":null,"loadStatsAsynchronous":null,"sortAlphabetically":null,"limitDisplayedShorten":"0","publicCookies":null,"choosableShorten":"on"}
