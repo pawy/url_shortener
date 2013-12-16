@@ -1,0 +1,9 @@
+sUrl Url Shortener Client
+-------------------------
+
+The sUrl Url Shortener Client does not collect or publish any personal information about the user.
+The applications share target will analyze the content of the shared information and try to extract an URL. No personal Data will be analyzed or published.
+
+No other data except for the url and the encrypted password (if configured) for the server side installation of the URL Shortener will be sent to the server.
+
+If you would like to report any violations of this policy, please contact surl@pawy.net
