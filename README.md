@@ -25,6 +25,12 @@ http://surl.bz/chromext
 
 The source is available here: https://github.com/pawy/url_shortener_chrome_extension
 
+Windows 8.1 App
+---------------
+
+There is a windows 8.1 app in the windows store. Directly share any url with the app and create a shortened one.
+http://surl.bz/msapp
+
 Installation
 ------------
 1. Copy the files into your root directory
