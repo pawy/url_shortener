@@ -31,7 +31,7 @@ Windows 8.1 App
 There is a windows 8.1 app in the windows store. Directly share any url with the app and create a shortened one.
 http://surl.bz/msapp
 
-[!(http://i.msdn.microsoft.com/dynimg/IC671223.png)](http://surl.bz/msapp/ "Download from Windows Store")
+[![Download From Windows Store](http://i.msdn.microsoft.com/dynimg/IC671223.png)](http://surl.bz/msapp/ "Download from Windows Store")
 
 
 
