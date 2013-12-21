@@ -1,4 +1,4 @@
-![URL Shortener](https://raw.github.com/pawy/icons/master/sUrl_icons/1_Desktop_Icons/icon_048.png "URL Shortener") url_shortener
+![URL Shortener](https://raw.github.com/pawy/icons/master/sUrl_icons/1_Desktop_Icons/icon_048.png "URL Shortener") sUrl URL Shortener
 =============
 
 Lightweight, file based, url shortener in PHP with OOP and Bootstrap-UI. No Database needed!
