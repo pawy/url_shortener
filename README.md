@@ -57,7 +57,7 @@ URL: http://yourdomain/surlapi
 - /version GET -> returns the version
 - /md5/[Value] GET -> returns the encrypted [Value]
 - /surl
-  - /[ShortenedURL]/redirec GET -> redirects to the url
+  - /[ShortenedURL]/redirect GET -> redirects to the url
   - /[ShortenedURL]/log GET -> click log
 - /surl POST -> Create
   - url: The url
