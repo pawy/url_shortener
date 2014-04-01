@@ -23,7 +23,7 @@ Chrome Extension
 There is a chrome extension available to directly shorten the current url with just one click.
 http://surl.bz/chromext
 
-[![Download from Chrome Store](https://developers.google.com/chrome/web-store/images/branding/ChromeWebStore_BadgeWBorder_v2_206x58.png)](http://surl.bz/chromext "Download from Chrome Store")
+[![Download from Chrome Store](http://developer.chrome.com/webstore/images/ChromeWebStore_BadgeWBorder_v2_206x58.png)](http://surl.bz/chromext "Download from Chrome Store")
 
 The source is available here: https://github.com/pawy/url_shortener_chrome_extension
 
