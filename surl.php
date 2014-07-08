@@ -279,21 +279,21 @@ if(Config::$passwordProtected)
             if(Config::$loadStatsAsynchronous) :
         ?>
         //Load Statistics with asynchronous request
-        $('div.shortens').on('click','.badge',function(){
-            $shorten = $(this).attr('shorten');
+        $('div.shortens').on('click','a.btn',function(){
+            $shorten = $(this).find('.badge').attr('shorten');
             //only query when showing, not when hiding
             if($('#stats'+$shorten).hasClass('collapse'))
             {
-                $this = $(this);
+                $badge = $(this).find('.badge');
                 $.ajax({
                     type: 'GET',
                     url: '/surlapi/surl/' + $shorten + '/log',
                     success: function(response)
                     {
                         $json_response = response;
-                        $this.html($json_response.numberOfHits);
+                        $badge.html($json_response.numberOfHits);
                         $('#stats'+$shorten).find('p').html($json_response.entries);
-                        $this.animate({backgroundColor:'red'},500).animate({backgroundColor:'#428bca'},500);
+                        $badge.animate({backgroundColor:'red'},500).animate({backgroundColor:'#428bca'},500);
                         setTimeout(function(){
                             setZclip();
                         }, 200 );
