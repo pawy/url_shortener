@@ -16,6 +16,7 @@ if(Helper::Get('saved',$_POST))
         Config::$passwordMD5Encrypted = md5(Helper::Get('password',$_POST));
     Config::$storageDir = Helper::Get('storageDir',$_POST) . '/';
     Config::$limitDisplayedShorten = Helper::Get('limitDisplayedShorten',$_POST);
+    Config::$googleSafeBrowsingApiKey = Helper::Get('googleSafeBrowsingApiKey',$_POST);
     Config::Save();
 
     if($newConfig = Helper::Get('newConfig',$_POST))
@@ -90,6 +91,11 @@ if(Helper::Get('saved',$_POST))
             <label for="storateDir">Limit Displayed Surls</label>
             <input type="number" class="form-control" placeholder="Storage Directory Name" id="limitDisplayedShorten" name="limitDisplayedShorten" value="<?= Config::$limitDisplayedShorten == null ? 0 : Config::$limitDisplayedShorten ?>" />
             <p class="help-block">Show only the last n shortened URLs, this only works when alphabetic order is disabled (0 means no limit)</p>
+        </div>
+        <div class="form-group">
+            <label for="storateDir">Google Safe Browsing API Key</label>
+            <input type="text" class="form-control" placeholder="Google Safe Browsing API Key" id="googleSafeBrowsingApiKey" name="googleSafeBrowsingApiKey" value="<?= Config::$googleSafeBrowsingApiKey ?>" />
+            <p class="help-block">If you have a Google Safe Browsing API Key, you can enable checks against the API to ensure the url to be shortened is not malicious. See documentation here: <a href="https://developers.google.com/safe-browsing/" target="_blank">API Documentation</a></p>
         </div>
         <?php if(file_exists(dirname(__FILE__) . '/config.php')): ?>
             <div class="alert alert-danger">
