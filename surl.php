@@ -230,34 +230,34 @@ if(Config::$passwordProtected)
                     {
             <?= endif; ?>
             
-            $.ajax({
-                type: 'POST',
-                url: '/surlapi/surl/',
-                data: {
-                    url : $('#url').val(),
-                    surl : $('#shorten').val(),
-                    auth : '<?= Helper::Get('pw',$_SESSION,'') ?>'
-                },
-                success: function(response)
-                {
-                    $.get(location.href, function(data) {
-                        $('#url, #shorten').val('');
-                        $section = $(data).find('#'+response.surl)
-                        $('div.shortens').prepend($section);
-                        $nav = $(data).find('a[href="#' + response.surl + '"]');
-                        $('.nav').prepend($nav);
-                        $('a[href="#' + response.surl + '"]').wrap('<li>');
-                        $('[data-spy="scroll"]').each(function () {
-                            var $spy = $(this).scrollspy('refresh')
+                        $.ajax({
+                            type: 'POST',
+                            url: '/surlapi/surl/',
+                            data: {
+                                url : $('#url').val(),
+                                surl : $('#shorten').val(),
+                                auth : '<?= Helper::Get('pw',$_SESSION,'') ?>'
+                            },
+                            success: function(response)
+                            {
+                                $.get(location.href, function(data) {
+                                    $('#url, #shorten').val('');
+                                    $section = $(data).find('#'+response.surl)
+                                    $('div.shortens').prepend($section);
+                                    $nav = $(data).find('a[href="#' + response.surl + '"]');
+                                    $('.nav').prepend($nav);
+                                    $('a[href="#' + response.surl + '"]').wrap('<li>');
+                                    $('[data-spy="scroll"]').each(function () {
+                                        var $spy = $(this).scrollspy('refresh')
+                                    });
+                                    window.location.hash = response.surl;
+                                    setZclipInitially($section.find('input.shorten'));
+                                    setTimeout(function(){
+                                        setZclip();
+                                    }, 200 );
+                                });
+                            }
                         });
-                        window.location.hash = response.surl;
-                        setZclipInitially($section.find('input.shorten'));
-                        setTimeout(function(){
-                            setZclip();
-                        }, 200 );
-                    });
-                }
-            })
             
             <?= if(!empty(Config::$googleSafeBrowsingApiKey)) : ?>
                     }
