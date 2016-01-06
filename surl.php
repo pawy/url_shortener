@@ -219,6 +219,17 @@ if(Config::$passwordProtected)
 
         $('form').submit(function (e) {
             e.preventDefault();
+            
+            <?= if(Config::$googleSafeBrowsingApiKey) : ?>
+            $.ajax({
+                type: 'GET',
+                url: 'https://sb-ssl.google.com/safebrowsing/api/lookup?client=surl&key=<?= Config::$googleSafeBrowsingApiKey ?>&appver=1.0&pver=1.0&url=' + encodeURIComponent($('#url').val()),
+                success: function(response)
+                {
+                    if(response == 'ok')
+                    {
+            <?= endif; ?>
+            
             $.ajax({
                 type: 'POST',
                 url: '/surlapi/surl/',
@@ -247,6 +258,12 @@ if(Config::$passwordProtected)
                     });
                 }
             })
+            
+            <?= if(Config::$googleSafeBrowsingApiKey) : ?>
+                    }
+                }
+            });
+            <?= endif; ?>
         });
 
         $('div.shortens').on('click','button.delete',function(){
