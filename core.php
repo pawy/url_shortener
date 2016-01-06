@@ -42,6 +42,10 @@ class Config
      * @var Show the textfield to freely choose the shortened url (otherwise its hidden and a random shortened url will alway be used)
      */
     public static $choosableShorten;
+    /**
+     * @var If you have a Google Safe Browsing API Key, you can enable checks against the API to ensure the url to be shortened is not malicious
+     */
+    public static $googleSafeBrowsingApiKey;
 
     public static function Load()
     {
