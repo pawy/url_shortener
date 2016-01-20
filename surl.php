@@ -220,7 +220,7 @@ if(Config::$passwordProtected)
         $('form').submit(function (e) {
             e.preventDefault();
             
-            <?= if(!empty(Config::$googleSafeBrowsingApiKey)) : ?>
+            <?php if(!empty(Config::$googleSafeBrowsingApiKey)) : ?>
             $.ajax({
                 type: 'GET',
                 url: 'https://sb-ssl.google.com/safebrowsing/api/lookup?client=surl&key=<?= Config::$googleSafeBrowsingApiKey ?>&appver=1.0&pver=1.0&url=' + encodeURIComponent($('#url').val()),
@@ -228,7 +228,7 @@ if(Config::$passwordProtected)
                 {
                     if(response == 'ok')
                     {
-            <?= endif; ?>
+            <?php endif; ?>
             
                         $.ajax({
                             type: 'POST',
@@ -259,11 +259,11 @@ if(Config::$passwordProtected)
                             }
                         });
             
-            <?= if(!empty(Config::$googleSafeBrowsingApiKey)) : ?>
+            <?php if(!empty(Config::$googleSafeBrowsingApiKey)) : ?>
                     }
                 }
             });
-            <?= endif; ?>
+            <?php endif; ?>
         });
 
         $('div.shortens').on('click','button.delete',function(){
