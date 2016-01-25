@@ -219,51 +219,34 @@ if(Config::$passwordProtected)
 
         $('form').submit(function (e) {
             e.preventDefault();
-            
-            <?php if(!empty(Config::$googleSafeBrowsingApiKey)) : ?>
-            $.ajax({
-                type: 'GET',
-                url: 'https://sb-ssl.google.com/safebrowsing/api/lookup?client=surl&key=<?= Config::$googleSafeBrowsingApiKey ?>&appver=1.0&pver=1.0&url=' + encodeURIComponent($('#url').val()),
-                success: function(response)
-                {
-                    if(response == 'ok')
+                $.ajax({
+                    type: 'POST',
+                    url: '/surlapi/surl/',
+                    data: {
+                        url : $('#url').val(),
+                        surl : $('#shorten').val(),
+                        auth : '<?= Helper::Get('pw',$_SESSION,'') ?>'
+                    },
+                    success: function(response)
                     {
-            <?php endif; ?>
-            
-                        $.ajax({
-                            type: 'POST',
-                            url: '/surlapi/surl/',
-                            data: {
-                                url : $('#url').val(),
-                                surl : $('#shorten').val(),
-                                auth : '<?= Helper::Get('pw',$_SESSION,'') ?>'
-                            },
-                            success: function(response)
-                            {
-                                $.get(location.href, function(data) {
-                                    $('#url, #shorten').val('');
-                                    $section = $(data).find('#'+response.surl)
-                                    $('div.shortens').prepend($section);
-                                    $nav = $(data).find('a[href="#' + response.surl + '"]');
-                                    $('.nav').prepend($nav);
-                                    $('a[href="#' + response.surl + '"]').wrap('<li>');
-                                    $('[data-spy="scroll"]').each(function () {
-                                        var $spy = $(this).scrollspy('refresh')
-                                    });
-                                    window.location.hash = response.surl;
-                                    setZclipInitially($section.find('input.shorten'));
-                                    setTimeout(function(){
-                                        setZclip();
-                                    }, 200 );
-                                });
-                            }
+                        $.get(location.href, function(data) {
+                            $('#url, #shorten').val('');
+                            $section = $(data).find('#'+response.surl)
+                            $('div.shortens').prepend($section);
+                            $nav = $(data).find('a[href="#' + response.surl + '"]');
+                            $('.nav').prepend($nav);
+                            $('a[href="#' + response.surl + '"]').wrap('<li>');
+                            $('[data-spy="scroll"]').each(function () {
+                                var $spy = $(this).scrollspy('refresh')
+                            });
+                            window.location.hash = response.surl;
+                            setZclipInitially($section.find('input.shorten'));
+                            setTimeout(function(){
+                                setZclip();
+                            }, 200 );
                         });
-            
-            <?php if(!empty(Config::$googleSafeBrowsingApiKey)) : ?>
                     }
-                }
-            });
-            <?php endif; ?>
+                });
         });
 
         $('div.shortens').on('click','button.delete',function(){

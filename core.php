@@ -406,6 +406,16 @@ class Helper
         //filter_var is on older PHP version (<5.3) not trustworthy
         if(!filter_var($url, FILTER_VALIDATE_URL))
             throw new InvalidURLException();
+
+        //perform google Safe Browsing API Request
+        if(!empty(Config::$googleSafeBrowsingApiKey))
+        {
+            return;
+            $gsburl = 'https://sb-ssl.google.com/safebrowsing/api/lookup?client=surl&key=' . Config::$googleSafeBrowsingApiKey .'&appver=1.0&pver=3.1&url='. urlencode($url);
+            $result = file_get_contents($gsburl);
+            var_dump($http_response_header);
+            die(var_dump($result));
+        }
     }
 
     public static function IsJson($string) {
