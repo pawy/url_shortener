@@ -560,7 +560,7 @@ class surl implements iApiController
 
                     //call the action method of the shorten if none or not existing call redirect action
                     if($request[2] && method_exists($this,$request[2]))
-                        $this->$request[2]();
+                        $this->redirect(); //$this->$request[2]();
                     else
                         $this->one();
                     break;
